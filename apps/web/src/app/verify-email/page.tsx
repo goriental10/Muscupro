@@ -1,0 +1,1 @@
+export default function Page(){return <main className="auth"><section className="auth-card"><h1>Vérification du courriel</h1><p className="muted">Votre adresse pourra être confirmée depuis le lien reçu.</p><a className="button" href="/login">Continuer</a></section></main>}

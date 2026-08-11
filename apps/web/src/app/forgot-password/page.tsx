@@ -1,0 +1,1 @@
+export default function Page(){return <main className="auth"><section className="auth-card"><h1>Mot de passe oublié</h1><p className="muted">Entrez votre courriel pour recevoir les instructions.</p><label className="field">Courriel<input type="email" required/></label><button className="button">Envoyer</button></section></main>}

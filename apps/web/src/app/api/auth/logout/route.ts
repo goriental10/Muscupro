@@ -1,0 +1,2 @@
+import{cookies}from"next/headers";import{NextResponse}from"next/server";import{apiRequest,authCookie}from"@/lib/api-server";
+export async function POST(){const store=await cookies(),refreshToken=store.get("muscupro_refresh")?.value;if(refreshToken)await apiRequest("/api/v1/auth/logout",{method:"POST",body:JSON.stringify({refreshToken})}).catch(()=>null);const response=NextResponse.json({ok:true});response.cookies.set("muscupro_access","",{...authCookie,maxAge:0});response.cookies.set("muscupro_refresh","",{...authCookie,maxAge:0});return response}

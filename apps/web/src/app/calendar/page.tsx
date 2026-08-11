@@ -1,0 +1,1 @@
+import {ModulePage} from '@/components/module-page';export default function Page(){return <ModulePage eyebrow="Calendrier" title="Votre semaine" description="Planifiez les séances et gardez une vue claire." items={[{title:'Lundi',detail:'Haut du corps — Force',tag:'Terminé'},{title:'Mercredi',detail:'Jambes — Puissance'},{title:'Samedi',detail:'Mobilité et récupération'}]}/>}

@@ -1,0 +1,1 @@
+export default function Page(){return <main className="auth"><section className="auth-card"><h1>Nouveau mot de passe</h1><label className="field">Mot de passe<input type="password" required/></label><button className="button">Enregistrer</button></section></main>}

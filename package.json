@@ -1,1 +1,24 @@
-{"name":"@muscupro/shared","version":"1.0.0","private":true,"scripts":{"build":"node -e \"console.log('Shared contracts ready')\"","typecheck":"node -e \"console.log('Shared types validated')\"","test":"node -e \"console.log('Shared checks passed')\""}}
+{
+  "name": "muscupro-global",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @muscupro/api prisma:generate",
+    "db:migrate": "pnpm --filter @muscupro/api prisma:migrate",
+    "db:deploy": "pnpm --filter @muscupro/api prisma:deploy",
+    "mobile:dev": "pnpm --filter @muscupro/mobile dev",
+    "mobile:android": "pnpm --filter @muscupro/mobile android",
+    "mobile:ios": "pnpm --filter @muscupro/mobile ios",
+    "mobile:prebuild": "pnpm --filter @muscupro/mobile prebuild",
+    "release:check": "node scripts/release-check.mjs",
+    "mobile:preview": "pnpm --filter @muscupro/mobile eas:preview",
+    "mobile:production": "pnpm --filter @muscupro/mobile eas:production",
+    "rc:validate": "node scripts/rc-validate.mjs",
+    "final:validate": "node scripts/final-validate.mjs"
+  }
+}

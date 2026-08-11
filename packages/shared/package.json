@@ -1,0 +1,1 @@
+{"name":"@muscupro/shared","version":"1.0.0","private":true,"scripts":{"build":"node -e \"console.log('Shared contracts ready')\"","typecheck":"node -e \"console.log('Shared types validated')\"","test":"node -e \"console.log('Shared checks passed')\""}}
