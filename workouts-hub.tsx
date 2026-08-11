@@ -1,0 +1,2 @@
+const workouts=[['Haut du corps — Force','6 exercices · 55 min'],['Jambes — Puissance','7 exercices · 60 min'],['Mobilité et récupération','5 exercices · 30 min']];
+export function WorkoutsHub(){return <section className="module-grid">{workouts.map(([name,meta])=><article className="card module-card" key={name}><p className="eyebrow">Programme</p><h2>{name}</h2><p className="muted">{meta}</p><button className="button" type="button">Démarrer</button></article>)}</section>}

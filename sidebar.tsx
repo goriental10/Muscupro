@@ -1,0 +1,3 @@
+import Link from "next/link";
+const links=[['/dashboard','Vue d’ensemble'],['/workouts','Séances'],['/nutrition','Nutrition'],['/progress','Progression'],['/coach-ai','Coach IA'],['/messages','Messagerie'],['/community','Communauté'],['/marketplace','Boutique'],['/calendar','Calendrier'],['/devices','Appareils'],['/billing','Abonnement'],['/profile','Profil']];
+export function Sidebar(){return <aside className="sidebar"><div className="brand">MuscuPro <span>Global</span></div><nav className="nav" aria-label="Navigation principale">{links.map(([href,label])=><Link key={href} href={href}>{label}</Link>)}</nav></aside>}

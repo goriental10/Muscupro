@@ -1,0 +1,1 @@
+{"framework":"nextjs","buildCommand":"cd ../.. && pnpm --filter @muscupro/web build","installCommand":"cd ../.. && pnpm install --frozen-lockfile","outputDirectory":".next"}

@@ -1,0 +1,8 @@
+name: Mobile build
+on: { workflow_dispatch: {} }
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: echo "Configure EAS credentials before production build"

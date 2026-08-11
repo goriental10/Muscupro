@@ -1,0 +1,3 @@
+import test from "node:test";import assert from "node:assert/strict";import { accessToken,refreshToken,tokenHash,verifyAccess } from "./auth.js";
+test("access tokens preserve the authenticated identity",async()=>{const input={sub:"user-1",email:"athlete@example.com",role:"ATHLETE"};const token=await accessToken(input);const output=await verifyAccess(token);assert.equal(output.sub,input.sub);assert.equal(output.email,input.email);assert.equal(output.role,input.role)});
+test("refresh tokens are random and only their hashes are stored",()=>{const first=refreshToken(),second=refreshToken();assert.notEqual(first,second);assert.ok(first.length>=64);assert.equal(tokenHash(first),tokenHash(first));assert.notEqual(tokenHash(first),first)});

@@ -1,0 +1,2 @@
+import { ModulePage } from "./module-page";
+export function CoachHub(){return <ModulePage eyebrow="Coach" title="Vos athlètes" description="Suivi des programmes, invitations et progression." items={[{title:'Alex L.',detail:'Programme Force · semaine 4',tag:'À jour'},{title:'Sophie M.',detail:'Programme Mobilité · semaine 2',tag:'Bilan requis'},{title:'Invitations',detail:'Invitez un nouvel athlète à rejoindre votre espace.'}]}/>}

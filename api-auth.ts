@@ -1,0 +1,3 @@
+import { apiRequest } from "./api-server";
+export type RefreshedTokens={accessToken:string;refreshToken:string};
+export async function authenticatedRequest(path:string,access?:string,refresh?:string){let response=access?await apiRequest(path,{headers:{authorization:`Bearer ${access}`}}):new Response(null,{status:401});let tokens:RefreshedTokens|undefined;if(response.status===401&&refresh){const renewal=await apiRequest("/api/v1/auth/refresh",{method:"POST",body:JSON.stringify({refreshToken:refresh})});if(renewal.ok){tokens=await renewal.json() as RefreshedTokens;response=await apiRequest(path,{headers:{authorization:`Bearer ${tokens.accessToken}`}})}}return{response,tokens}}
