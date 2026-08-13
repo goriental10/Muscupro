@@ -15,6 +15,7 @@ const required = [
   'apps/api/prisma/schema.prisma',
   'railway.json',
   'docs/DEPLOY_RAILWAY_VERCEL.md',
+  'docs/CHATGPT_ACTION.md',
   '.env.production.example',
   '.github/workflows/ci.yml',
   '.github/workflows/mobile-build.yml',
@@ -56,7 +57,7 @@ if (issues.length) {
 }
 
 const envTemplate = fs.readFileSync(path.join(root, '.env.production.example'), 'utf8');
-for (const key of ['DATABASE_URL=', 'JWT_SECRET=', 'WEB_ORIGIN=', 'API_URL=', 'AUTH_SECRET=']) {
+for (const key of ['DATABASE_URL=', 'JWT_SECRET=', 'WEB_ORIGIN=', 'API_URL=', 'AUTH_SECRET=', 'OAUTH_CLIENT_ID=', 'OAUTH_CLIENT_SECRET=', 'OAUTH_REDIRECT_URIS=']) {
   if (!envTemplate.includes(key)) {
     console.error(`Release check failed. Missing ${key} in .env.production.example`);
     process.exit(1);

@@ -24,6 +24,7 @@ model User {
   updatedAt       DateTime  @updatedAt
   sessions        Session[]
   workouts        Workout[]
+  oauthCodes      OAuthCode[]
 }
 
 model Session {
@@ -51,4 +52,18 @@ model Workout {
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, createdAt])
+}
+
+model OAuthCode {
+  id          String    @id @default(cuid())
+  codeHash    String    @unique
+  userId      String
+  clientId    String
+  redirectUri String
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
