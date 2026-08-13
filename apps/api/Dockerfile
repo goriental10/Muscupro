@@ -1,20 +1,19 @@
-FROM node:24-alpine AS build
-WORKDIR /app
+FROM node:24-alpine
 
-COPY package.json ./
-RUN npm install
+WORKDIR /repo
+RUN corepack enable
 
-COPY . .
-RUN npx prisma generate && npm run build
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json apps/api/package.json
+COPY packages/shared/package.json packages/shared/package.json
+RUN pnpm install --filter @muscupro/api... --frozen-lockfile
 
-FROM node:24-alpine AS runtime
-WORKDIR /app
+COPY apps/api apps/api
+COPY packages/shared packages/shared
+RUN pnpm --filter @muscupro/api build
+
 ENV NODE_ENV=production
-
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/prisma ./prisma
+WORKDIR /repo/apps/api
 
 EXPOSE 4000
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/app.js"]
+CMD ["sh", "-c", "pnpm prisma:deploy && pnpm start"]

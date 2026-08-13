@@ -5,12 +5,17 @@ const root = process.cwd();
 const required = [
   'package.json',
   'pnpm-workspace.yaml',
+  'pnpm-lock.yaml',
   'apps/web/package.json',
+  'apps/web/vercel.json',
   'apps/api/package.json',
+  'apps/api/Dockerfile',
   'apps/mobile/package.json',
   'apps/mobile/app.config.ts',
-  'apps/mobile/eas.json',
   'apps/api/prisma/schema.prisma',
+  'railway.json',
+  'docs/DEPLOY_RAILWAY_VERCEL.md',
+  '.env.production.example',
   '.github/workflows/ci.yml',
   '.github/workflows/mobile-build.yml',
 ];
@@ -47,6 +52,24 @@ walk(root);
 if (issues.length) {
   console.error('Potential secrets detected:');
   for (const file of [...new Set(issues)]) console.error(` - ${file}`);
+  process.exit(1);
+}
+
+const envTemplate = fs.readFileSync(path.join(root, '.env.production.example'), 'utf8');
+for (const key of ['DATABASE_URL=', 'JWT_SECRET=', 'WEB_ORIGIN=', 'API_URL=', 'AUTH_SECRET=']) {
+  if (!envTemplate.includes(key)) {
+    console.error(`Release check failed. Missing ${key} in .env.production.example`);
+    process.exit(1);
+  }
+}
+
+const railway = JSON.parse(fs.readFileSync(path.join(root, 'railway.json'), 'utf8'));
+if (railway?.build?.dockerfilePath !== 'apps/api/Dockerfile') {
+  console.error('Release check failed. railway.json must target apps/api/Dockerfile');
+  process.exit(1);
+}
+if (railway?.deploy?.healthcheckPath !== '/health/ready') {
+  console.error('Release check failed. railway.json must target /health/ready healthcheck');
   process.exit(1);
 }
 console.log(`Release check OK: ${required.length} critical files present; no obvious live secrets detected.`);
