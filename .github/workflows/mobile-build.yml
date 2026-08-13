@@ -1,5 +1,7 @@
 name: Mobile build
 on: { workflow_dispatch: {} }
+permissions:
+  contents: write
 jobs:
   mobile:
     runs-on: ubuntu-latest
