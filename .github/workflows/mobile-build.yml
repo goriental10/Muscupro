@@ -33,9 +33,14 @@ jobs:
       - run: pnpm --filter @muscupro/mobile typecheck
       - run: pnpm --filter @muscupro/mobile test
       - run: pnpm mobile:eas:check
-      - name: Require Expo project credentials
+      - name: Require Expo project credentials and API endpoint
         run: |
           test -n "$EXPO_TOKEN" || (echo "Missing EXPO_TOKEN repository secret" && exit 1)
           test -n "$EXPO_PUBLIC_EAS_PROJECT_ID" || (echo "Missing EXPO_PROJECT_ID repository secret" && exit 1)
+          test -n "$EXPO_PUBLIC_API_URL" || (echo "Missing EXPO_PUBLIC_API_URL repository variable" && exit 1)
+          case "$EXPO_PUBLIC_API_URL" in
+            https://*) ;;
+            *) echo "EXPO_PUBLIC_API_URL must be a public HTTPS URL" && exit 1 ;;
+          esac
       - name: Start EAS build
         run: pnpm --filter @muscupro/mobile exec eas build --platform "${{ inputs.platform }}" --profile "${{ inputs.profile }}" --non-interactive --no-wait

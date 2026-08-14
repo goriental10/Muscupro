@@ -20,6 +20,7 @@ const required = [
   'apps/api/prisma/migrations/202608130001_health_sync/migration.sql',
   'railway.json',
   'docs/DEPLOY_RAILWAY_VERCEL.md',
+  'docs/DEPLOY_MOBILE_EAS.md',
   '.env.production.example',
   '.github/workflows/ci.yml',
   '.github/workflows/mobile-build.yml',
@@ -92,7 +93,7 @@ if (!String(mobilePackage.dependencies?.expo).startsWith('~57.')) {
 }
 
 const mobileWorkflow = fs.readFileSync(path.join(root, '.github/workflows/mobile-build.yml'), 'utf8');
-for (const token of ['eas build', '--non-interactive', 'EXPO_TOKEN', 'EXPO_PROJECT_ID']) {
+for (const token of ['eas build', '--non-interactive', 'EXPO_TOKEN', 'EXPO_PROJECT_ID', 'EXPO_PUBLIC_API_URL', 'public HTTPS URL']) {
   if (!mobileWorkflow.includes(token)) {
     console.error(`Release check failed. Mobile workflow is missing ${token}.`);
     process.exit(1);

@@ -18,6 +18,7 @@ const mustExist = [
   "docs/RELEASE_CHECKLIST.md",
   "docs/E2E_TEST_PLAN.md",
   "docs/FINAL_RELEASE.md",
+  "docs/DEPLOY_MOBILE_EAS.md",
   ".env.production.example"
 ];
 const missing = mustExist.filter((f) => !fs.existsSync(path.join(root, f)));
