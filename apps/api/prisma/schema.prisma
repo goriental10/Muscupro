@@ -13,6 +13,21 @@ enum Role {
   ADMIN
 }
 
+enum HealthProvider {
+  APPLE_HEALTH
+  HEALTH_CONNECT
+}
+
+enum HealthMetricType {
+  STEPS
+  ACTIVE_ENERGY_KCAL
+  HEART_RATE_BPM
+  SLEEP_MINUTES
+  WEIGHT_KG
+  WORKOUT_MINUTES
+  DISTANCE_KM
+}
+
 model User {
   id              String    @id @default(cuid())
   email           String    @unique
@@ -24,6 +39,23 @@ model User {
   updatedAt       DateTime  @updatedAt
   sessions        Session[]
   workouts        Workout[]
+  healthMetrics   HealthMetric[]
+}
+
+model HealthMetric {
+  id         String           @id @default(cuid())
+  userId     String
+  provider   HealthProvider
+  type       HealthMetricType
+  value      Float
+  unit       String
+  recordedAt DateTime
+  externalId String?
+  createdAt  DateTime         @default(now())
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider, externalId])
+  @@index([userId, type, recordedAt])
 }
 
 model Session {

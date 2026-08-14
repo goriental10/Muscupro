@@ -1,5 +1,6 @@
 import type { PropsWithChildren } from "react";
-import { SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export function Screen({ children }: PropsWithChildren) {
   return <SafeAreaView style={styles.safe}><ScrollView contentContainerStyle={styles.body}>{children}</ScrollView></SafeAreaView>;

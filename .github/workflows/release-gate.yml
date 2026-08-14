@@ -1,11 +1,28 @@
 name: Release gate
 on: { workflow_dispatch: {} }
 permissions:
-  contents: write
-  pull-requests: write
+  contents: read
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://localhost:5432/muscupro_ci
+      WEB_ORIGIN: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
-      - run: node scripts/final-validate.mjs
+      - name: Configure ephemeral test secrets
+        shell: bash
+        run: |
+          echo "JWT_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "AUTH_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.14.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm final:validate
+      - run: pnpm release:check
+      - run: pnpm mobile:eas:check
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build

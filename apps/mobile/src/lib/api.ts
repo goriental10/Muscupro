@@ -32,8 +32,12 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
     }
   }
   if (!response.ok) {
-    const body = await response.json().catch(() => ({ message: `HTTP ${response.status}` }));
-    throw new Error(body.message ?? body.code ?? `HTTP ${response.status}`);
+    const body = await response.json().catch(() => ({ message: `HTTP ${response.status}` })) as {
+      message?: string;
+      code?: string;
+      error?: string;
+    };
+    throw new Error(body.message ?? body.code ?? body.error ?? `HTTP ${response.status}`);
   }
   return response.json() as Promise<T>;
 }

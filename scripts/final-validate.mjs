@@ -7,6 +7,11 @@ const mustExist = [
   "apps/api/prisma/schema.prisma",
   "apps/web/src/app/dashboard/page.tsx",
   "apps/mobile/app.config.ts",
+  "apps/mobile/eas.json",
+  "apps/mobile/app/(tabs)/nutrition.tsx",
+  "apps/mobile/app/(tabs)/progress.tsx",
+  "apps/mobile/app/(tabs)/health.tsx",
+  "apps/api/prisma/migrations/202608130001_health_sync/migration.sql",
   ".github/workflows/ci.yml",
   ".github/workflows/release-gate.yml",
   ".github/workflows/mobile-build.yml",
@@ -30,6 +35,13 @@ for (const rel of ["apps/web/package.json", "apps/api/package.json", "apps/mobil
   const p = JSON.parse(fs.readFileSync(path.join(root, rel), "utf8"));
   if (p.version !== "1.0.0") {
     console.error(`Unexpected version in ${rel}: ${p.version}`);
+    process.exit(1);
+  }
+}
+const mobile = JSON.parse(fs.readFileSync(path.join(root, "apps/mobile/package.json"), "utf8"));
+for (const script of ["build", "typecheck", "test", "native:prebuild", "eas:preview", "eas:production"]) {
+  if (!mobile.scripts?.[script] || /node\s+-e|console\.log/.test(mobile.scripts[script])) {
+    console.error(`Mobile script is missing or simulated: ${script}`);
     process.exit(1);
   }
 }

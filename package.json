@@ -14,11 +14,24 @@
     "mobile:dev": "pnpm --filter @muscupro/mobile dev",
     "mobile:android": "pnpm --filter @muscupro/mobile android",
     "mobile:ios": "pnpm --filter @muscupro/mobile ios",
-    "mobile:prebuild": "pnpm --filter @muscupro/mobile prebuild",
+    "mobile:prebuild": "pnpm --filter @muscupro/mobile run native:prebuild",
+    "mobile:doctor": "pnpm --filter @muscupro/mobile run doctor",
+    "mobile:eas:check": "node scripts/eas-check.mjs",
     "release:check": "node scripts/release-check.mjs",
     "mobile:preview": "pnpm --filter @muscupro/mobile eas:preview",
     "mobile:production": "pnpm --filter @muscupro/mobile eas:production",
     "rc:validate": "node scripts/rc-validate.mjs",
     "final:validate": "node scripts/final-validate.mjs"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "prisma"
+    ],
+    "ignoredBuiltDependencies": [
+      "dtrace-provider"
+    ]
   }
 }

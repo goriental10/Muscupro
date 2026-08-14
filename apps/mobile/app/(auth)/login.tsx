@@ -11,7 +11,7 @@ export default function Login() {
     setError("");
     const response = await fetch(`${API_URL}/api/v1/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, password, client: "mobile" }) });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) return setError(data.message ?? "Connexion impossible");
+    if (!response.ok) return setError(data.message ?? data.error ?? "Connexion impossible");
     await saveTokens(data.accessToken, data.refreshToken);
     router.replace("/(tabs)/dashboard");
   }
