@@ -17,6 +17,7 @@ const config: ExpoConfig = {
   name: "MuscuPro Global",
   slug: "muscupro-global",
   version: "1.0.0",
+  icon: "./assets/icon.png",
   orientation: "portrait",
   scheme: "muscupro",
   platforms: ["ios", "android"],
@@ -26,7 +27,11 @@ const config: ExpoConfig = {
     supportsTablet: true
   },
   android: {
-    package: "com.goriental10.muscupro"
+    package: "com.goriental10.muscupro",
+    adaptiveIcon: {
+      foregroundImage: "./assets/adaptive-icon.png",
+      backgroundColor: "#050708"
+    }
   },
   plugins: [
     "expo-router",
