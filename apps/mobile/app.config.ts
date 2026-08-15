@@ -5,12 +5,13 @@ const env = (globalThis as typeof globalThis & {
 }).process?.env ?? {};
 
 const extra: ExpoConfig["extra"] = {
-  apiUrl: env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000"
+  apiUrl: env.EXPO_PUBLIC_API_URL ?? "http://localhost:4000",
+  eas: {
+    projectId:
+      env.EXPO_PUBLIC_EAS_PROJECT_ID ??
+      "193bdb66-26e1-4c24-a38c-55e2016a1398"
+  }
 };
-
-if (env.EXPO_PUBLIC_EAS_PROJECT_ID) {
-  extra.eas = { projectId: env.EXPO_PUBLIC_EAS_PROJECT_ID };
-}
 
 const config: ExpoConfig = {
   name: "MuscuPro Global",
