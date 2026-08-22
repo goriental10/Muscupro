@@ -1,7 +1,8 @@
 name: CI
 on: [push, pull_request]
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
