@@ -1,20 +1,48 @@
-# Déploiement Railway + Vercel
+# Déploiement Railway + Vercel (monorepo pnpm)
 
-## Railway — API et PostgreSQL
+## Portée
 
-1. Créer un service PostgreSQL privé et un service API depuis ce dépôt.
-2. Définir `DATABASE_URL`, `JWT_SECRET`, `WEB_ORIGIN`, `NODE_ENV=production` et `PORT=4000`.
-3. Déployer avec `apps/api/Dockerfile`; le démarrage applique `prisma migrate deploy`.
-4. Vérifier `/health/live` puis `/health/ready` avant d’autoriser le trafic.
-5. Activer les sauvegardes PostgreSQL avant toute migration ultérieure. PostgreSQL ne doit pas être exposé publiquement.
+Ce dépôt déploie en production :
+- `apps/api` sur Railway (Dockerfile)
+- `apps/web` sur Vercel (Next.js)
 
-## Vercel — application Web
+`apps/marketing` n’est pas présent dans ce clone.
 
-1. Configurer le dossier racine `apps/web`.
-2. Définir uniquement `API_URL` et `AUTH_SECRET` comme variables serveur.
-3. Déployer, puis définir `WEB_ORIGIN` sur l’URL HTTPS exacte de Vercel dans Railway.
-4. Tester inscription, connexion, renouvellement après 15 minutes, déconnexion et chargement des entraînements.
+## 1) Déployer l’API sur Railway
 
-## Retour arrière
+1. Créer un service PostgreSQL privé + un service applicatif depuis ce repo.
+2. Utiliser `railway.json` (Dockerfile `apps/api/Dockerfile`, healthcheck `/health/ready`).
+3. Variables Railway obligatoires :
+   - `DATABASE_URL` (PostgreSQL Railway)
+   - `JWT_SECRET` (au moins 32 caractères)
+   - `WEB_ORIGIN` (URL HTTPS finale du web Vercel)
+   - `NODE_ENV=production`
+   - `PORT` (optionnel, défaut API: `4000`, Railway peut l’injecter)
+4. Le démarrage exécute `prisma migrate deploy` puis lance l’API.
+5. Vérifier `GET /health/live` puis `GET /health/ready`.
 
-Conserver le déploiement précédent et une sauvegarde PostgreSQL. En cas d’échec, restaurer l’image précédente avant toute migration incompatible.
+## 2) Déployer le web sur Vercel
+
+1. Configurer le projet Vercel avec la racine `apps/web` (le `vercel.json` local gère les commandes monorepo).
+2. Variables Vercel obligatoires :
+   - `API_URL` (URL publique de l’API Railway, ex: `https://api-xxx.up.railway.app`)
+   - `AUTH_SECRET` (secret indépendant, long et aléatoire)
+3. Déployer, récupérer l’URL HTTPS Vercel finale, puis la reporter dans `WEB_ORIGIN` côté Railway.
+4. Redéployer l’API si `WEB_ORIGIN` a changé.
+
+## 3) Ordre recommandé
+
+1. Railway PostgreSQL
+2. Railway API (avec `WEB_ORIGIN` provisoire si nécessaire)
+3. Vercel web
+4. Mise à jour finale de `WEB_ORIGIN` sur Railway puis redéploiement API
+
+## Vérifications minimales post-déploiement
+
+- Authentification (inscription/connexion/refresh/logout)
+- Chargement des entraînements
+- Santé API (`/health/live`, `/health/ready`)
+
+## Sécurité
+
+Ne jamais committer de secrets réels dans le dépôt. Utiliser uniquement les variables de plateforme.

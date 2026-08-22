@@ -5,12 +5,23 @@ const root = process.cwd();
 const required = [
   'package.json',
   'pnpm-workspace.yaml',
+  'pnpm-lock.yaml',
   'apps/web/package.json',
+  'apps/web/vercel.json',
   'apps/api/package.json',
+  'apps/api/Dockerfile',
   'apps/mobile/package.json',
   'apps/mobile/app.config.ts',
   'apps/mobile/eas.json',
+  'apps/mobile/app/(tabs)/nutrition.tsx',
+  'apps/mobile/app/(tabs)/progress.tsx',
+  'apps/mobile/app/(tabs)/health.tsx',
   'apps/api/prisma/schema.prisma',
+  'apps/api/prisma/migrations/202608130001_health_sync/migration.sql',
+  'railway.json',
+  'docs/DEPLOY_RAILWAY_VERCEL.md',
+  'docs/DEPLOY_MOBILE_EAS.md',
+  '.env.production.example',
   '.github/workflows/ci.yml',
   '.github/workflows/mobile-build.yml',
 ];
@@ -48,5 +59,44 @@ if (issues.length) {
   console.error('Potential secrets detected:');
   for (const file of [...new Set(issues)]) console.error(` - ${file}`);
   process.exit(1);
+}
+
+const envTemplate = fs.readFileSync(path.join(root, '.env.production.example'), 'utf8');
+for (const key of ['DATABASE_URL=', 'JWT_SECRET=', 'WEB_ORIGIN=', 'API_URL=', 'AUTH_SECRET=']) {
+  if (!envTemplate.includes(key)) {
+    console.error(`Release check failed. Missing ${key} in .env.production.example`);
+    process.exit(1);
+  }
+}
+
+const railway = JSON.parse(fs.readFileSync(path.join(root, 'railway.json'), 'utf8'));
+if (railway?.build?.dockerfilePath !== 'apps/api/Dockerfile') {
+  console.error('Release check failed. railway.json must target apps/api/Dockerfile');
+  process.exit(1);
+}
+if (railway?.deploy?.healthcheckPath !== '/health/ready') {
+  console.error('Release check failed. railway.json must target /health/ready healthcheck');
+  process.exit(1);
+}
+
+const mobilePackage = JSON.parse(fs.readFileSync(path.join(root, 'apps/mobile/package.json'), 'utf8'));
+for (const script of ['build', 'typecheck', 'test', 'native:prebuild', 'eas:preview', 'eas:production']) {
+  const command = mobilePackage.scripts?.[script];
+  if (!command || /node\s+-e|console\.log/.test(command)) {
+    console.error(`Release check failed. Mobile script ${script} is missing or simulated.`);
+    process.exit(1);
+  }
+}
+if (!String(mobilePackage.dependencies?.expo).startsWith('~57.')) {
+  console.error('Release check failed. Mobile must target Expo SDK 57.');
+  process.exit(1);
+}
+
+const mobileWorkflow = fs.readFileSync(path.join(root, '.github/workflows/mobile-build.yml'), 'utf8');
+for (const token of ['eas build', '--non-interactive', 'EXPO_TOKEN', 'EXPO_PROJECT_ID', 'EXPO_PUBLIC_API_URL', 'public HTTPS URL']) {
+  if (!mobileWorkflow.includes(token)) {
+    console.error(`Release check failed. Mobile workflow is missing ${token}.`);
+    process.exit(1);
+  }
 }
 console.log(`Release check OK: ${required.length} critical files present; no obvious live secrets detected.`);

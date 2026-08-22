@@ -1,8 +1,47 @@
 name: Mobile build
-on: { workflow_dispatch: {} }
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: EAS build profile
+        required: true
+        default: preview
+        type: choice
+        options: [development, preview, production]
+      platform:
+        description: Native platform
+        required: true
+        default: android
+        type: choice
+        options: [android, ios, all]
+permissions:
+  contents: write
+  pull-requests: write
 jobs:
   mobile:
     runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EXPO_PUBLIC_EAS_PROJECT_ID: ${{ secrets.EXPO_PROJECT_ID }}
+      EXPO_PUBLIC_API_URL: ${{ vars.EXPO_PUBLIC_API_URL }}
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Configure EAS credentials before production build"
+      - uses: pnpm/action-setup@v4
+        with: { version: 10.14.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @muscupro/mobile typecheck
+      - run: pnpm --filter @muscupro/mobile test
+      - run: pnpm mobile:eas:check
+      - name: Require Expo project credentials and API endpoint
+        run: |
+          test -n "$EXPO_TOKEN" || (echo "Missing EXPO_TOKEN repository secret" && exit 1)
+          test -n "$EXPO_PUBLIC_EAS_PROJECT_ID" || (echo "Missing EXPO_PROJECT_ID repository secret" && exit 1)
+          test -n "$EXPO_PUBLIC_API_URL" || (echo "Missing EXPO_PUBLIC_API_URL repository variable" && exit 1)
+          case "$EXPO_PUBLIC_API_URL" in
+            https://*) ;;
+            *) echo "EXPO_PUBLIC_API_URL must be a public HTTPS URL" && exit 1 ;;
+          esac
+      - name: Start EAS build
+        run: pnpm --filter @muscupro/mobile exec eas build --platform "${{ inputs.platform }}" --profile "${{ inputs.profile }}" --non-interactive --no-wait

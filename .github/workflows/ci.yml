@@ -1,15 +1,24 @@
 name: CI
 on: [push, pull_request]
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   validate:
     runs-on: ubuntu-latest
     env:
-      DATABASE_URL: postgresql://test:test@localhost:5432/test
-      JWT_SECRET: ci-secret-that-is-at-least-thirty-two-characters
+      DATABASE_URL: postgresql://localhost:5432/muscupro_ci
       WEB_ORIGIN: http://localhost:3000
-      AUTH_SECRET: ci-web-secret-that-is-at-least-thirty-two-characters
     steps:
       - uses: actions/checkout@v4
+      - name: Configure ephemeral test secrets
+        shell: bash
+        run: |
+          echo "JWT_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
+          echo "AUTH_SECRET=$(openssl rand -hex 32)" >> "$GITHUB_ENV"
       - uses: pnpm/action-setup@v4
         with: { version: 10.14.0 }
       - uses: actions/setup-node@v4
@@ -18,3 +27,4 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+      - run: pnpm release:check

@@ -131,3 +131,9 @@ Le workspace `apps/mobile` ajoute une application Expo/React Native avec authent
 ## Final release
 
 This source package is tagged as **MuscuPro Global v1.0.0**. Run `pnpm final:validate` after installing dependencies and before deployment.
+
+## Déploiement production (API + Web)
+
+- Guide concis Railway (API) + Vercel (Web) : `docs/DEPLOY_RAILWAY_VERCEL.md`
+- Guide Android Preview avec Expo/EAS : `docs/DEPLOY_MOBILE_EAS.md`
+- Vérification avant release : `pnpm release:check`
