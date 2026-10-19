@@ -2,12 +2,12 @@
   "name": "muscupro-global",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@11.25.0",
   "scripts": {
-    "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
+    "dev": "node scripts/dev-web.mjs",
+    "build": "pnpm --filter @muscupro/web --filter @muscupro/api build",
+    "typecheck": "pnpm --filter @muscupro/web --filter @muscupro/api typecheck",
+    "test": "pnpm --filter @muscupro/web --filter @muscupro/api test",
     "db:generate": "pnpm --filter @muscupro/api prisma:generate",
     "db:migrate": "pnpm --filter @muscupro/api prisma:migrate",
     "db:deploy": "pnpm --filter @muscupro/api prisma:deploy",
@@ -19,6 +19,9 @@
     "mobile:preview": "pnpm --filter @muscupro/mobile eas:preview",
     "mobile:production": "pnpm --filter @muscupro/mobile eas:production",
     "rc:validate": "node scripts/rc-validate.mjs",
-    "final:validate": "node scripts/final-validate.mjs"
+    "final:validate": "node scripts/final-validate.mjs",
+    "dev:api": "pnpm --filter @muscupro/api dev",
+    "build:web": "pnpm --filter @muscupro/web build",
+    "test:web": "pnpm --filter @muscupro/web test"
   }
 }

@@ -1,1 +1,2 @@
-export default function Page(){return <main className="auth"><section className="auth-card"><h1>Vérification du courriel</h1><p className="muted">Votre adresse pourra être confirmée depuis le lien reçu.</p><a className="button" href="/login">Continuer</a></section></main>}
+import Link from "next/link";
+export default function Page() { return <main className="auth"><section className="auth-card"><h1>Vérification du courriel</h1><p className="muted">Ce parcours nécessite le service de courriel transactionnel et ses routes serveur. Il reste à mettre en service.</p><Link className="button" href="/profile">Revenir à mon profil</Link></section></main>; }

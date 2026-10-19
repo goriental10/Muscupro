@@ -1,6 +1,2 @@
-import { CoachHub } from "@/components/coach-hub";
-import { PremiumGuard } from "@/components/premium-guard";
-
-export default function CoachPage() {
-  return <PremiumGuard feature="COACH_ATHLETE_MANAGEMENT" title="Gestion Coach ↔ Athlète"><CoachHub /></PremiumGuard>;
-}
+import { IntegrationHub } from "@/components/integration-hub";
+export default function Page() { return <IntegrationHub title="Espace coach" description="Préparation de la gestion des athlètes." requirements={["Mettre en service les rôles et les invitations.", "Implémenter l’affectation des programmes et le suivi autorisé."]} />; }

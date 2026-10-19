@@ -1,1 +1,2 @@
-import {ModulePage} from '@/components/module-page';export default function Page(){return <ModulePage eyebrow="Rapports" title="Bilans" description="Synthèses claires de l’activité et de la progression." items={[{title:'Rapport hebdomadaire',detail:'Séances, volume et assiduité'},{title:'Rapport mensuel',detail:'Tendances et objectifs'},{title:'Export',detail:'Préparer un document partageable'}]}/>}
+import { redirect } from "next/navigation";
+export default function Page() { redirect("/progress"); }
