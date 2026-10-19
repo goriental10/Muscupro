@@ -1,1 +1,2 @@
-import {ModulePage} from '@/components/module-page';export default function Page(){return <ModulePage eyebrow="Communauté" title="Fil d’activité" description="Partagez vos progrès dans un espace positif." items={[{title:'Défi du mois',detail:'16 séances sur 20 terminées',tag:'80 %'},{title:'Nouvelle discussion',detail:'Conseils pour organiser sa semaine.'},{title:'Groupes',detail:'Retrouvez les membres de votre salle.'}]}/>}
+import { IntegrationHub } from "@/components/integration-hub";
+export default function Page() { return <IntegrationHub title="Communauté" description="Un espace de partage à construire." requirements={["Mettre en service les comptes et les droits d’accès.", "Implémenter les publications, les commentaires et la modération."]} />; }

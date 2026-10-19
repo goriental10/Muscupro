@@ -1,1 +1,2 @@
-import {ModulePage} from '@/components/module-page';export default function Page(){return <ModulePage eyebrow="Administration" title="Supervision" description="Vue synthétique des services et comptes." items={[{title:'Services',detail:'Application Web opérationnelle',tag:'OK'},{title:'Utilisateurs',detail:'Gestion des rôles et sessions'},{title:'Audit',detail:'Historique des actions administratives'}]}/>}
+import { IntegrationHub } from "@/components/integration-hub";
+export default function Page() { return <IntegrationHub title="Administration" description="Préparation des outils de gestion." requirements={["Implémenter et tester le rôle administrateur côté serveur.", "Relier les outils de gestion et le journal d’audit à la base de données."]} />; }

@@ -1,0 +1,13 @@
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const args = process.argv.slice(2);
+const value = (names, fallback) => { const index = args.findIndex(arg => names.includes(arg)); return index >= 0 ? args[index + 1] : fallback; };
+const host = value(["--host", "--hostname", "-H"], "0.0.0.0");
+const port = value(["--port", "-p"], process.env.PORT ?? "3000");
+if (!host || !/^\d+$/.test(port ?? "") || Number(port) < 1 || Number(port) > 65535) throw new Error("Invalid host or port.");
+const child = spawn(process.execPath, [path.join(root, "apps/web/node_modules/next/dist/bin/next"), "dev", ...(args.includes("--webpack") ? ["--webpack"] : []), "--hostname", host, "--port", port], { cwd: path.join(root, "apps/web"), stdio: "inherit", env: process.env });
+for (const signal of ["SIGINT", "SIGTERM"]) process.on(signal, () => child.kill(signal));
+child.on("error", error => { console.error(error.message); process.exit(1); });
+child.on("exit", code => process.exit(code ?? 1));

@@ -1,0 +1,9 @@
+{
+  "core_web_automated_checks": "passed",
+  "interactive_browser_qa": "blocked",
+  "mobile_layout_qa": "pending",
+  "production_database_and_auth": "pending",
+  "native_app_builds": "pending",
+  "payments": "pending",
+  "production_deployment": "blocked"
+}

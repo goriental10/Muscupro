@@ -1,1 +1,16 @@
-{"name":"@muscupro/mobile","version":"1.0.0","private":true,"scripts":{"dev":"node -e \"console.log('Expo app ready')\"","build":"node -e \"console.log('Mobile source validated')\"","typecheck":"node -e \"console.log('Mobile types validated')\"","test":"node -e \"console.log('Mobile checks passed')\"","android":"node -e \"console.log('Use EAS build')\"","ios":"node -e \"console.log('Use EAS build')\"","prebuild":"node -e \"console.log('Expo prebuild')\"","eas:preview":"node -e \"console.log('EAS preview')\"","eas:production":"node -e \"console.log('EAS production')\""}}
+{
+  "name": "@muscupro/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node ../../scripts/native-status.mjs",
+    "build": "node ../../scripts/native-status.mjs",
+    "typecheck": "node ../../scripts/native-status.mjs",
+    "test": "node ../../scripts/native-status.mjs",
+    "android": "node ../../scripts/native-status.mjs",
+    "ios": "node ../../scripts/native-status.mjs",
+    "prebuild": "node ../../scripts/native-status.mjs",
+    "eas:preview": "node ../../scripts/native-status.mjs",
+    "eas:production": "node ../../scripts/native-status.mjs"
+  }
+}
