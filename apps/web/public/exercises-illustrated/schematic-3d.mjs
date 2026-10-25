@@ -5,6 +5,7 @@
  */
 import {drawAnatomyOverlay} from './anatomy-zones.mjs';
 import {extraSchematics,applyExtraMotion} from './schematic-extra-motions.mjs';
+import {fourthSchematics,applyFourthMotion} from './schematic-fourth-motions.mjs';
 import {drawReliefSegment,jointShade} from './figure-surface.mjs';
 export const schematicDuration=3600;
 export const schematics=Object.freeze({
@@ -33,6 +34,7 @@ export const schematics=Object.freeze({
   'cardio-jumping-jack-adapte':{motion:'stepJack',label:'Jumping jack adapté'},
   'mobilite-chat-vache':{motion:'catCow',label:'Chat-vache'},
   ...extraSchematics,
+  ...fourthSchematics,
 });
 const TAU=2*Math.PI;
 const clamp=v=>Math.min(1,Math.max(0,v));
@@ -56,6 +58,7 @@ export function poseForExercise(id,phase=0){
  if(!spec)throw Error('Schéma 3D indisponible pour cet exercice');
  const p=standing(),a=phaseAmount(phase);
  if(Object.hasOwn(extraSchematics,id))return applyExtraMotion(spec.motion,phase,p);
+ if(Object.hasOwn(fourthSchematics,id))return applyFourthMotion(spec.motion,phase,p);
  switch(spec.motion){
  case 'squat':
   move(p,['pelvis','lHip','rHip',...upper],1,-.63*a);
@@ -253,7 +256,7 @@ export function poseForExercise(id,phase=0){
 }
 export function motionLabel(id,phase){
  const spec=schematics[id];if(!spec)return '';
- if(['march','shoulders','alternatingCurl','stepJack','jog','lateralWalk'].includes(spec.motion))return 'Cycle alterné';
+ if(['march','shoulders','alternatingCurl','stepJack','jog','lateralWalk','deadBug','stepMarch'].includes(spec.motion))return 'Cycle alterné';
  if(spec.motion==='sidePlank')return 'Maintien dynamique';
  return (((phase%1)+1)%1)<.5?'Phase aller':'Phase retour';
 }
