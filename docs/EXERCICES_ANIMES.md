@@ -6,7 +6,7 @@ L’entrée **Exercices animés** ouvre `/exercises`. La version autonome est di
 
 - **141 exercices** dans **12 groupes**.
 - **1 illustration d’origine** fournie pour les **élévations latérales avec haltères** : 12 images, GIF inchangé, 700 × 700 px, boucle de 3 secondes.
-- **60 mouvements 3D schématiques** : cinq exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires, en trois dimensions, projetée sur un Canvas 2D orientable.
+- **60 mouvements 3D schématiques** : cinq exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires 3D, présentée dans le maillage WebGL ou dans les rendus Canvas 2D de secours.
 - **80 exercices** n’ont pas encore d’animation propre : ils restent dans l’onglet « Tous », affichent clairement « À illustrer », sans recycler le média d’un autre exercice.
 
 Les 60 animations possèdent maintenant un **mode WebGL avec de véritables surfaces triangulées 3D**, plus un retour au mannequin 2D en cas d’indisponibilité graphique. Les mouvements restent des **simulations simplifiées**, sans capture de mouvements, maillage médical, mesure musculaire ou validation biomécanique. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
@@ -74,7 +74,7 @@ pnpm --filter @muscupro/web typecheck
 pnpm --filter @muscupro/web build
 ```
 
-Les suites Node contrôlent aussi les maillages WebGL de 48 mouvements sur plusieurs phases (surfaces triangulées, coordonnées et normales finies, éclairages par région et matrices de caméra), et les silhouettes du mannequin 2D de secours (deux finitions), le maintien des deux rendus précédents, les 60 schémas 3D, les 61 associations de médias et les 80 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
+Les suites Node contrôlent aussi les maillages WebGL de 60 mouvements sur plusieurs phases (surfaces triangulées, coordonnées et normales finies, éclairages par région et matrices de caméra), et les silhouettes du mannequin 2D de secours (deux finitions), le maintien des deux rendus précédents, les 60 schémas 3D, les 61 associations de médias et les 80 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
 
 Un aperçu Web est disponible dans les déploiements de branche Vercel. L'exécution de vrais contextes WebGL et les essais de performances / manipulation tactile sur iPhone et Android restent à tester manuellement : les tests Node valident le générateur de géométrie mais ne simulent pas le GPU. Les tests automatiques et une prévisualisation ne remplacent pas une vérification fonctionnelle sur iPhone/Android ni une expertise en biomécanique. La production et la branche `main` ne sont pas modifiées par cette étape.
 
