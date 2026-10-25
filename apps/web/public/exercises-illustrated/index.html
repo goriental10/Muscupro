@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Le catalogue MuscuPro : 141 exercices, 12 groupes musculaires et un lecteur d’illustrations animées.">
+  <title>Exercices animés — MuscuPro Global</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#studio">Aller au lecteur animé</a>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="MuscuPro Global — accueil du catalogue">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 11v10m5-14v18m12-18v18m5-14v10M10 16h12" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>
+      <span><strong>MuscuPro<span>Global</span></strong><small>LE MOUVEMENT PREND FORME.</small></span>
+    </a>
+    <span class="header-label"><i></i> CATALOGUE ILLUSTRÉ</span>
+  </header>
+  <main class="page">
+    <section class="intro" aria-labelledby="title">
+      <div><p class="eyebrow">VOTRE BIBLIOTHÈQUE D’ENTRAÎNEMENT</p><h1 id="title">Votre entraînement.<br> <span>En mouvement.</span></h1><p class="intro-copy">Retrouvez vos exercices et leurs illustrations animées. Les médias disponibles sont signalés dans la bibliothèque.</p></div>
+      <div class="stats" aria-label="Contenu du catalogue">
+        <div><strong id="total-count">141</strong><span>exercices</span></div>
+        <div><strong id="group-count">12</strong><span>groupes musculaires</span></div>
+        <div><strong id="media-count">1</strong><span>illustration animée</span></div>
+      </div>
+    </section>
+    <div class="workspace">
+      <aside class="library" aria-labelledby="library-heading">
+        <div class="section-heading"><h2 id="library-heading">La bibliothèque</h2><span class="small-label">01 — 141</span></div>
+        <label class="search"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><span class="sr-only">Rechercher un exercice</span><input id="query" type="search" placeholder="Squat, biceps, haltères…" autocomplete="off"></label>
+        <div class="filters">
+          <label>Groupe musculaire<select id="category"></select></label>
+          <label>Matériel<select id="equipment"></select></label>
+        </div>
+        <div class="library-tabs" role="group" aria-label="Afficher les exercices">
+          <button id="all-tab" type="button" aria-pressed="false">Tous · 141</button><button id="illustrated-tab" type="button" aria-pressed="true">Illustrés · 1</button>
+          <button id="favorites-tab" type="button" aria-pressed="false">♡ Favoris <span id="favorite-count">0</span></button>
+        </div>
+        <div class="results-line"><span id="result-count" role="status" aria-live="polite"></span><button id="clear-filters" type="button">Réinitialiser</button></div>
+        <div id="exercise-list" class="exercise-list" aria-label="Résultats du catalogue"></div>
+        <p class="library-footer"><span class="dot"></span> Votre illustration, intégrée au catalogue</p>
+      </aside>
+      <section id="studio" class="studio" aria-labelledby="exercise-name" tabindex="-1">
+        <div class="viewer-heading">
+          <div><p id="exercise-category" class="eyebrow">ÉPAULES</p><h2 id="exercise-name">Élévations latérales avec haltères</h2><p id="exercise-meta" class="meta">Haltères</p></div>
+          <button id="favorite" class="favorite-button" type="button" aria-pressed="false" aria-label="Ajouter cet exercice aux favoris">♡</button>
+        </div>
+        <div class="stage">
+          <div class="stage-top"><span class="live-badge"><i></i> ILLUSTRATION ANIMÉE</span><span id="exercise-index" class="stage-index"></span></div>
+          <canvas id="viewport" tabindex="0" role="img" aria-label="Illustration animée des élévations latérales avec haltères. Contrôlez la lecture et le zoom." aria-describedby="viewer-help"></canvas>
+          <div id="canvas-error" class="canvas-error" role="status" hidden><strong>Illustration animée</strong><p id="canvas-error-message"></p></div>
+          <div class="stage-bottom"><span><i class="muscle-dot"></i> Groupe musculaire sélectionné</span><div class="zoom-buttons"><button id="zoom-out" data-requires-media type="button" aria-label="Dézoomer">−</button><button id="zoom-in" data-requires-media type="button" aria-label="Zoomer">+</button></div></div>
+        </div>
+        <div class="playback">
+          <button id="play" data-requires-media class="play-button" type="button" aria-pressed="false">Ⅱ <span>Pause</span></button>
+          <label class="timeline"><span class="sr-only">Position dans le cycle animé</span><input id="timeline" data-requires-media type="range" min="0" max="1000" value="0" step="1"></label>
+          <output id="phase" for="timeline" aria-live="off">0 %</output>
+          <label class="speed-label"><span class="sr-only">Vitesse de lecture</span><select id="speed" data-requires-media aria-label="Vitesse de lecture"><option value="0.5">× 0,5</option><option value="1" selected>× 1</option><option value="1.5">× 1,5</option><option value="2">× 2</option></select></label>
+        </div>
+        <div class="view-controls"><span class="illustration-source">Illustration fournie par vous</span><button id="reset-view" data-requires-media class="text-button" type="button">↺ Recentrer</button></div>
+        <div class="movement-details"><div><span class="detail-label">LE MÉDIA DE CET EXERCICE</span><h3 id="family-label">Illustration anatomique animée</h3><p id="media-description">Votre GIF original, avec ses 12 images et son rythme de lecture.</p></div><div class="exercise-navigation"><button id="previous" type="button" aria-label="Exercice précédent">←</button><button id="next" type="button" aria-label="Exercice suivant">→</button></div></div>
+        <p id="viewer-help" class="viewer-help">Boutons +/− : zoomer · Glisser après le zoom : déplacer · Curseur : parcourir l’animation</p>
+      </section>
+    </div>
+    <footer class="page-footer"><span>MuscuPro Global <span class="footer-divider">/</span> Explorer. Comprendre. Progresser.</span><span>1 illustration disponible · Les autres fiches attendent un média correspondant à leur mouvement.</span></footer>
+  </main>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
