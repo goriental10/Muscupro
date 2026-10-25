@@ -17,15 +17,20 @@ $('total-count').textContent=String(catalogue.length);$('group-count').textConte
 function showError(message){$('canvas-error').hidden=!message;$('canvas-error-message').textContent=message;}
 function updatePlayback(){if(!player)return;$('play').replaceChildren(document.createTextNode(player.playing?'Ⅱ ':'▶ '));const span=document.createElement('span');span.textContent=player.playing?'Pause':'Lecture';$('play').append(span);$('play').setAttribute('aria-pressed',String(!player.playing));}
 try{
-  player=new IllustrationPlayer($('viewport'),{onPhase:phase=>{$('timeline').value=String(Math.round(phase*1000));$('phase').textContent=`${Math.round(phase*100)} %`;},onStatus:showError,onAvailability:available=>document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=!available;})});
+  player=new IllustrationPlayer($('viewport'),{onPhase:phase=>{$('timeline').value=String(Math.round(phase*1000));$('phase').textContent=`${Math.round(phase*100)} %`;},onStatus:showError,onMovement:label=>{$('movement-phase').textContent=label;},onAvailability:available=>document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=!available;})});
   updatePlayback();
 }catch(error){showError(error.message);document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=true;});}
+function updateMediaDescription(){
+  const media=illustrations[selected.id],natural=$('motion-mode').value==='natural'&&media?.motion;
+  $('family-label').textContent=!media?'Illustration à ajouter':natural?'Illustration articulée':'GIF d’origine';
+  $('media-description').textContent=!media?'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.':natural?'Votre illustration animée aux articulations : montée de 1,45 s, descente de 2,05 s. Les bras parcourent le mouvement, le buste et les pieds restent stables.':'Le fichier fourni, avec ses 12 images et ses fondus entre deux poses.';
+}
 function updateFavorite(){
   const saved=favorites.has(selected.id);$('favorite').textContent=saved?'♥':'♡';$('favorite').setAttribute('aria-pressed',String(saved));$('favorite').setAttribute('aria-label',saved?'Retirer cet exercice des favoris':'Ajouter cet exercice aux favoris');$('favorite-count').textContent=String(favorites.size);
 }
 function choose(exercise,{syncHash=true}={}){
   selected=exercise;player?.setIllustration(illustrations[exercise.id]);
-  $('exercise-name').textContent=exercise.name;$('exercise-meta').textContent=exercise.equipment;$('exercise-category').textContent=exercise.group.toLocaleUpperCase('fr-CA');$('family-label').textContent=illustrations[exercise.id]?'Illustration anatomique animée':'Illustration à ajouter';$('media-description').textContent=illustrations[exercise.id]?'Votre GIF original, avec ses 12 images et son rythme de lecture.':'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.';
+  $('exercise-name').textContent=exercise.name;$('exercise-meta').textContent=exercise.equipment;$('exercise-category').textContent=exercise.group.toLocaleUpperCase('fr-CA');updateMediaDescription();
   $('exercise-index').textContent=`${String(catalogue.indexOf(exercise)+1).padStart(3,'0')} / ${catalogue.length}`;
   $('viewport').setAttribute('aria-label',`${exercise.name}, illustration animée. Utiliser les boutons pour zoomer et contrôler la lecture.`);
   if(syncHash)history.replaceState(null,'',`${location.pathname}${location.search}#${exercise.id}`);
@@ -59,6 +64,7 @@ $('favorite').addEventListener('click',()=>{if(favorites.has(selected.id))favori
 $('play').addEventListener('click',()=>{if(player){player.setPlaying(!player.playing);updatePlayback();}});
 $('timeline').addEventListener('input',()=>{if(player){player.setPlaying(false);player.setPhase(Number($('timeline').value)/1000);updatePlayback();}});
 $('speed').addEventListener('change',()=>{if(player)player.speed=Number($('speed').value);});
+$('motion-mode').addEventListener('change',()=>{player?.setMode($('motion-mode').value);updateMediaDescription();});
 $('reset-view').addEventListener('click',()=>player?.resetView());
 $('zoom-in').addEventListener('click',()=>player?.zoom(.25));$('zoom-out').addEventListener('click',()=>player?.zoom(-.25));
 for(const [id,delta] of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{if(!filtered.length)return;const index=filtered.findIndex(ex=>ex.id===selected.id);choose(filtered[(Math.max(0,index)+delta+filtered.length)%filtered.length]);document.querySelector('.exercise[aria-pressed=true]')?.scrollIntoView({block:'nearest'});});

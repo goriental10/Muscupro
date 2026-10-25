@@ -3,6 +3,7 @@ export const illustrations = {
   'epaules-elevations-laterales-avec-halteres': {
     title: 'Élévations latérales avec haltères',
     group: 'Épaules',
+    motion: 'lateral-raise',
     original: 'assets/elevations-laterales-exercice-musculation-1.gif',
     atlas: 'assets/elevations-laterales-frames.webp',
     width: 700, height: 700, columns: 4, frames: 12,

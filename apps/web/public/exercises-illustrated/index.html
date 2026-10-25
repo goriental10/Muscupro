@@ -59,8 +59,8 @@
           <output id="phase" for="timeline" aria-live="off">0 %</output>
           <label class="speed-label"><span class="sr-only">Vitesse de lecture</span><select id="speed" data-requires-media aria-label="Vitesse de lecture"><option value="0.5">× 0,5</option><option value="1" selected>× 1</option><option value="1.5">× 1,5</option><option value="2">× 2</option></select></label>
         </div>
-        <div class="view-controls"><span class="illustration-source">Illustration fournie par vous</span><button id="reset-view" data-requires-media class="text-button" type="button">↺ Recentrer</button></div>
-        <div class="movement-details"><div><span class="detail-label">LE MÉDIA DE CET EXERCICE</span><h3 id="family-label">Illustration anatomique animée</h3><p id="media-description">Votre GIF original, avec ses 12 images et son rythme de lecture.</p></div><div class="exercise-navigation"><button id="previous" type="button" aria-label="Exercice précédent">←</button><button id="next" type="button" aria-label="Exercice suivant">→</button></div></div>
+        <div class="view-controls"><label class="motion-select">Animation<select id="motion-mode" data-requires-media><option value="natural" selected>Mouvement fluide</option><option value="original">GIF d’origine</option></select></label><span id="movement-phase" class="movement-phase" aria-live="off"></span><button id="reset-view" data-requires-media class="text-button" type="button">↺ Recentrer</button></div>
+        <div class="movement-details"><div><span class="detail-label">LE MÉDIA DE CET EXERCICE</span><h3 id="family-label">Illustration articulée</h3><p id="media-description">Montée progressive, descente contrôlée et transitions douces.</p></div><div class="exercise-navigation"><button id="previous" type="button" aria-label="Exercice précédent">←</button><button id="next" type="button" aria-label="Exercice suivant">→</button></div></div>
         <p id="viewer-help" class="viewer-help">Boutons +/− : zoomer · Glisser après le zoom : déplacer · Curseur : parcourir l’animation</p>
       </section>
     </div>
