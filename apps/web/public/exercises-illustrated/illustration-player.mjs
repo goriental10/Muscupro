@@ -12,7 +12,7 @@ export class IllustrationPlayer {
     this.abort=new AbortController();this.generation=0;this.elapsed=0;this.speed=1;
     this.playing=!matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.disposed=false;this.inView=true;this.visible=!document.hidden;this.raf=0;this.lastTime=0;this.lastReport=0;
-    this.zoomLevel=1;this.pan=[0,0];this.media=null;this.image=null;this.schematicId=null;this.cameraYaw=-.48;
+    this.zoomLevel=1;this.pan=[0,0];this.media=null;this.image=null;this.schematicId=null;this.cameraYaw=-.48;this.showMuscles=true;
     this.bindEvents();
     this.resize=new ResizeObserver(()=>this.requestRender());this.resize.observe(canvas);
     this.intersection=new IntersectionObserver(entries=>{
@@ -71,6 +71,7 @@ export class IllustrationPlayer {
   resetView(){this.zoomLevel=1;this.pan=[0,0];this.requestRender();}
   zoom(delta){this.zoomLevel=Math.max(1,Math.min(2.8,this.zoomLevel+delta));if(this.zoomLevel===1)this.pan=[0,0];this.requestRender();}
   rotateCamera(delta){if(!this.schematicId)return;this.cameraYaw+=delta;this.requestRender();}
+  setMuscleVisibility(show){this.showMuscles=!!show;this.requestRender();}
   requestRender(){if(this.disposed||!this.visible||this.raf)return;this.raf=requestAnimationFrame(time=>this.tick(time));}
   render(){
     const c=this.canvas,ctx=this.ctx,dpr=Math.min(devicePixelRatio||1,2);
@@ -85,7 +86,7 @@ export class IllustrationPlayer {
     const boundX=Math.max(0,(w-width)/2+width*.25),boundY=Math.max(0,(h-height)/2+height*.25);
     this.pan[0]=Math.max(-boundX/dpr,Math.min(boundX/dpr,this.pan[0]));this.pan[1]=Math.max(-boundY/dpr,Math.min(boundY/dpr,this.pan[1]));
     const x=(width-w)/2+this.pan[0]*dpr,y=(height-h)/2+this.pan[1]*dpr;
-    if(this.schematicId){ctx.save();ctx.translate(x,y);ctx.scale(fit,fit);drawSchematic(ctx,this.schematicId,this.elapsed,this.cameraYaw);ctx.restore();}
+    if(this.schematicId){ctx.save();ctx.translate(x,y);ctx.scale(fit,fit);drawSchematic(ctx,this.schematicId,this.elapsed,this.cameraYaw,{showMuscles:this.showMuscles});ctx.restore();}
     else if(this.mode==='natural'&&this.motion){ctx.save();ctx.translate(x,y);ctx.scale(fit,fit);this.motion.render(ctx,this.elapsed);ctx.restore();}
     else{const index=frameAtTime(media,this.elapsed);ctx.drawImage(this.image,(index%media.columns)*media.width,Math.floor(index/media.columns)*media.height,media.width,media.height,x,y,w,h);}
   }
