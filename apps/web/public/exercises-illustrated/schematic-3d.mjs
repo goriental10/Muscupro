@@ -7,6 +7,7 @@ import {drawAnatomyOverlay} from './anatomy-zones.mjs';
 import {extraSchematics,applyExtraMotion} from './schematic-extra-motions.mjs';
 import {fourthSchematics,applyFourthMotion} from './schematic-fourth-motions.mjs';
 import {drawReliefSegment,jointShade} from './figure-surface.mjs';
+import {drawMannequin} from './mannequin-renderer.mjs';
 export const schematicDuration=3600;
 export const schematics=Object.freeze({
   'pectoraux-pompes-classiques':{motion:'pushup',label:'Pompes classiques'},
@@ -279,7 +280,7 @@ export function projectPoint(point,yaw=-.48){
  const rotatedX=x*c-z*s,depth=x*s+z*c;
  return {x:350+rotatedX*116,y:574-y*116+depth*23,depth};
 }
-export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true,figureStyle='relief'}={}){
+export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true,figureStyle='mannequin',material='ceramique'}={}){
  const spec=schematics[id];if(!spec)return;
  const p=poseForExercise(id,elapsed/schematicDuration);
  const points=Object.fromEntries(Object.entries(p).map(([key,value])=>[key,projectPoint(value,yaw)]));
@@ -291,6 +292,13 @@ export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true,figureSt
   const c=projectPoint([-2,0,i*.5],yaw),d=projectPoint([2,0,i*.5],yaw);
   ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
   ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(d.x,d.y);ctx.stroke();
+ }
+ if(figureStyle==='mannequin'){
+  drawMannequin(ctx,points,material);
+  if(showMuscles)drawAnatomyOverlay(ctx,points,id);
+  ctx.font='600 12px system-ui';ctx.textAlign='center';ctx.fillStyle='#66738b';
+  ctx.fillText('MANNEQUIN STYLISÉ · MOUVEMENT INDICATIF',350,665);
+  ctx.restore();return;
  }
  const highlight=spec.motion==='squat'?'legs':spec.motion==='hinge'?'legs':
   spec.motion==='pushup'||spec.motion==='row'||spec.motion==='press'||spec.motion==='curl'||spec.motion==='triceps'||spec.motion==='shoulders'?'arms':
