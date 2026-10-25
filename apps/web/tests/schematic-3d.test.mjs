@@ -7,6 +7,7 @@ import { anatomicalZones, anatomicalZoneForId, groupForSchematicId } from '../pu
 import { extraSchematics,applyExtraMotion } from '../public/exercises-illustrated/schematic-extra-motions.mjs';
 import { fourthSchematics,applyFourthMotion } from '../public/exercises-illustrated/schematic-fourth-motions.mjs';
 import { figureStyles,segmentGradientStops } from '../public/exercises-illustrated/figure-surface.mjs';
+import {mannequinMaterials,mannequinPalette,drawMannequin,drawTaperedLimb,drawMannequinTrunk} from '../public/exercises-illustrated/mannequin-renderer.mjs';
 
 test('3D schematics are associated to distinct real catalogue exercises',()=>{
  assert.equal(Object.keys(schematics).length,48);
@@ -65,8 +66,10 @@ test('all 12 muscle groups provide nonempty illustrative overlays',()=>{
 
 test('schematics render with and without overlay, without relying on a browser',()=>{
  const gradient=()=>({addColorStop(){}});
- const ctx={save(){},restore(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},arc(){},fill(){},fillText(){},ellipse(){},createLinearGradient:gradient,createRadialGradient:gradient};
+ const ctx={save(){},restore(){},beginPath(){},closePath(){},moveTo(){},lineTo(){},bezierCurveTo(){},quadraticCurveTo(){},stroke(){},arc(){},fill(){},fillText(){},ellipse(){},createLinearGradient:gradient,createRadialGradient:gradient};
  for(const id of Object.keys(schematics)){
+  assert.doesNotThrow(()=>drawSchematic(ctx,id,725,.2,{showMuscles:true,figureStyle:'mannequin',material:'ceramique'}),id+' styled mannequin');
+  assert.doesNotThrow(()=>drawSchematic(ctx,id,725,.2,{showMuscles:true,figureStyle:'mannequin',material:'ardoise'}),id+' alternate mannequin surface');
   assert.doesNotThrow(()=>drawSchematic(ctx,id,725,.2,{showMuscles:true,figureStyle:'relief'}),id+' shaded overlay');
   assert.doesNotThrow(()=>drawSchematic(ctx,id,925,-.8,{showMuscles:false,figureStyle:'structure'}),id+' original structure');
  }
@@ -121,4 +124,21 @@ test('all 48 schematic animations and the original form 49 distinct media associ
  assert.equal(catalogue.length,141);
  for(const id of animated)assert.ok(catalogue.some(e=>e.id===id),id);
  assert.equal(catalogue.length-animated.size,92);
+});
+
+test('mannequin has two independent material palettes and organic silhouette',()=>{
+ assert.deepEqual([...mannequinMaterials],['ceramique','ardoise']);
+ assert.notDeepEqual(mannequinPalette('ceramique'),mannequinPalette('ardoise'));
+ assert.deepEqual(mannequinPalette('invalid'),mannequinPalette('ceramique'));
+ const calls={bezier:0,quadratic:0,ellipse:0};
+ const gradient=()=>({addColorStop(){}});
+ const ctx={save(){},restore(){},beginPath(){},closePath(){},moveTo(){},lineTo(){},bezierCurveTo(){calls.bezier++},quadraticCurveTo(){calls.quadratic++},stroke(){},arc(){},fill(){},fillText(){},ellipse(){calls.ellipse++},createLinearGradient:gradient,createRadialGradient:gradient};
+ const points=poseForExercise('quadriceps-squat',.36);
+ const projected=Object.fromEntries(Object.entries(points).map(([key,value])=>[key,projectPoint(value)]));
+ drawTaperedLimb(ctx,projected.lHip,projected.lKnee,22,16,mannequinPalette());
+ drawMannequinTrunk(ctx,projected,mannequinPalette());
+ drawMannequin(ctx,projected,'ceramique');
+ assert.ok(calls.bezier>20,'smooth, tapered transitions are drawn');
+ assert.ok(calls.quadratic>20,'torso and limb curves are drawn');
+ assert.ok(calls.ellipse>10,'head, hands, feet and joints are rendered');
 });
