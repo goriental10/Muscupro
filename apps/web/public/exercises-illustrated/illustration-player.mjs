@@ -36,6 +36,10 @@ export class IllustrationPlayer {
       event.preventDefault();
       if(['+','='].includes(event.key))this.zoom(.2);
       if(event.key==='-')this.zoom(-.2);
+      if(this.schematicId&&this.zoomLevel===1){
+        if(event.key==='ArrowLeft')this.cameraYaw-=Math.PI/18;
+        if(event.key==='ArrowRight')this.cameraYaw+=Math.PI/18;
+      }
       if(this.zoomLevel>1){
         if(event.key==='ArrowLeft')this.pan[0]-=12;if(event.key==='ArrowRight')this.pan[0]+=12;
         if(event.key==='ArrowUp')this.pan[1]-=12;if(event.key==='ArrowDown')this.pan[1]+=12;
@@ -68,7 +72,7 @@ export class IllustrationPlayer {
   setMode(mode){if(this.schematicId||!['natural','original'].includes(mode))return;const phase=this.total?this.elapsed/this.total:0;this.mode=mode;this.updateDuration();this.elapsed=phase*(this.total||0);this.lastTime=0;this.requestRender();}
   setPlaying(playing){this.playing=playing;this.lastTime=0;this.requestRender();}
   setPhase(value){if(!this.media)return;this.elapsed=Math.max(0,Math.min(.999,Number(value)||0))*this.total;this.onPhase(this.elapsed/this.total);this.requestRender();}
-  resetView(){this.zoomLevel=1;this.pan=[0,0];this.requestRender();}
+  resetView(){this.zoomLevel=1;this.pan=[0,0];if(this.schematicId)this.cameraYaw=-.48;this.requestRender();}
   zoom(delta){this.zoomLevel=Math.max(1,Math.min(2.8,this.zoomLevel+delta));if(this.zoomLevel===1)this.pan=[0,0];this.requestRender();}
   rotateCamera(delta){if(!this.schematicId)return;this.cameraYaw+=delta;this.requestRender();}
   setMuscleVisibility(show){this.showMuscles=!!show;this.requestRender();}
