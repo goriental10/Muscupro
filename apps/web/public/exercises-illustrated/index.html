@@ -15,7 +15,7 @@
       <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 11v10m5-14v18m12-18v18m5-14v10M10 16h12" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg></span>
       <span><strong>MuscuPro<span>Global</span></strong><small>LE MOUVEMENT PREND FORME.</small></span>
     </a>
-    <span class="header-label"><i></i> CATALOGUE ILLUSTRÉ</span>
+    <span class="header-label"><i></i> CATALOGUE ANIMÉ</span>
   </header>
   <main class="page">
     <section class="intro" aria-labelledby="title">
@@ -23,7 +23,7 @@
       <div class="stats" aria-label="Contenu du catalogue">
         <div><strong id="total-count">141</strong><span>exercices</span></div>
         <div><strong id="group-count">12</strong><span>groupes musculaires</span></div>
-        <div><strong id="media-count">13</strong><span>animations</span></div>
+        <div><strong id="media-count">25</strong><span>animations</span></div>
       </div>
     </section>
     <div class="workspace">
@@ -35,7 +35,7 @@
           <label>Matériel<select id="equipment"></select></label>
         </div>
         <div class="library-tabs" role="group" aria-label="Afficher les exercices">
-          <button id="all-tab" type="button" aria-pressed="false">Tous · 141</button><button id="illustrated-tab" type="button" aria-pressed="true">Animés · 13</button>
+          <button id="all-tab" type="button" aria-pressed="false">Tous · 141</button><button id="illustrated-tab" type="button" aria-pressed="true">Animés · 25</button>
           <button id="favorites-tab" type="button" aria-pressed="false">♡ Favoris <span id="favorite-count">0</span></button>
         </div>
         <div class="results-line"><span id="result-count" role="status" aria-live="polite"></span><button id="clear-filters" type="button">Réinitialiser</button></div>
@@ -59,12 +59,12 @@
           <output id="phase" for="timeline" aria-live="off">0 %</output>
           <label class="speed-label"><span class="sr-only">Vitesse de lecture</span><select id="speed" data-requires-media aria-label="Vitesse de lecture"><option value="0.5">× 0,5</option><option value="1" selected>× 1</option><option value="1.5">× 1,5</option><option value="2">× 2</option></select></label>
         </div>
-        <div class="view-controls"><label class="motion-select">Animation<select id="motion-mode" data-requires-media><option value="natural" selected>Mouvement fluide</option><option value="original">GIF d’origine</option></select></label><span id="movement-phase" class="movement-phase" aria-live="off"></span><button id="camera-left" data-schematic hidden type="button" class="text-button" aria-label="Tourner la vue 3D à gauche">↶ Vue</button><button id="camera-right" data-schematic hidden type="button" class="text-button" aria-label="Tourner la vue 3D à droite">Vue ↷</button><button id="reset-view" data-requires-media class="text-button" type="button">↺ Recentrer</button></div>
+        <div class="view-controls"><label class="motion-select">Animation<select id="motion-mode" data-requires-media><option value="natural" selected>Mouvement fluide</option><option value="original">GIF d’origine</option></select></label><span id="movement-phase" class="movement-phase" aria-live="off"></span><button id="camera-left" data-schematic hidden type="button" class="text-button" aria-label="Tourner la vue 3D à gauche">↶ Vue</button><button id="camera-right" data-schematic hidden type="button" class="text-button" aria-label="Tourner la vue 3D à droite">Vue ↷</button><label id="anatomy-panel" data-schematic hidden class="muscle-control"><input type="checkbox" id="muscle-overlay" checked> Muscles illustrés <span id="anatomy-zone" class="anatomy-zone" aria-live="polite"></span></label><button id="reset-view" data-requires-media class="text-button" type="button">↺ Recentrer</button></div>
         <div class="movement-details"><div><span class="detail-label">LE MÉDIA DE CET EXERCICE</span><h3 id="family-label">Illustration articulée</h3><p id="media-description">Montée progressive, descente contrôlée et transitions douces.</p></div><div class="exercise-navigation"><button id="previous" type="button" aria-label="Exercice précédent">←</button><button id="next" type="button" aria-label="Exercice suivant">→</button></div></div>
         <p id="viewer-help" class="viewer-help">Boutons +/− : zoomer · Glisser pour déplacer (après zoom) ou tourner la vue 3D · Curseur : parcourir l’animation</p>
       </section>
     </div>
-    <footer class="page-footer"><span>MuscuPro Global <span class="footer-divider">/</span> Explorer. Comprendre. Progresser.</span><span>1 illustration d’origine + 12 schémas 3D simplifiés · Les autres fiches attendent leur propre média.</span></footer>
+    <footer class="page-footer"><span>MuscuPro Global <span class="footer-divider">/</span> Explorer. Comprendre. Progresser.</span><span>1 illustration d’origine + 24 schémas 3D simplifiés · Les 116 autres fiches attendent une animation.</span></footer>
   </main>
   <script type="module" src="app.mjs"></script>
 </body>
