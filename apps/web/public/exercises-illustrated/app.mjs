@@ -2,6 +2,7 @@ import { catalogue, categories, equipmentTypes, filterExercises } from './catalo
 import { illustrations } from './illustrations.mjs';
 import { IllustrationPlayer } from './illustration-player.mjs';
 import { schematics } from './schematic-3d.mjs';
+import { anatomicalZoneForId } from './anatomy-zones.mjs';
 
 const $=id=>document.getElementById(id);
 const knownIds=new Set(catalogue.map(ex=>ex.id));
@@ -25,8 +26,9 @@ function updateMediaDescription(){
   const media=illustrations[selected.id],schematic=schematics[selected.id],natural=$('motion-mode').value==='natural'&&media?.motion;
   $('motion-mode').disabled=!media;
   for(const control of document.querySelectorAll('[data-schematic]'))control.hidden=!schematic;
+  $('anatomy-zone').textContent=schematic?(anatomicalZoneForId(selected.id)?.label??'Zone musculaire illustrative'):'';
   $('family-label').textContent=schematic?'Schéma 3D animé':!media?'Animation à ajouter':natural?'Illustration articulée':'GIF d’origine';
-  $('media-description').textContent=schematic?'Démonstration 3D simplifiée et orientable, avec cycle propre à cet exercice. Schéma indicatif : ce modèle ne remplace pas une démonstration technique validée.':!media?'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.':natural?'Votre illustration animée aux articulations : montée de 1,45 s, descente de 2,05 s. Les bras parcourent le mouvement, le buste et les pieds restent stables.':'Le fichier fourni, avec ses 12 images et ses fondus entre deux poses.';
+  $('media-description').textContent=schematic?'Démonstration 3D simplifiée et orientable, avec cycle spécifique à cet exercice et mise en évidence optionnelle d’une région musculaire. Schéma indicatif, non validé comme démonstration technique.':!media?'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.':natural?'Votre illustration animée aux articulations : montée de 1,45 s, descente de 2,05 s. Les bras parcourent le mouvement, le buste et les pieds restent stables.':'Le fichier fourni, avec ses 12 images et ses fondus entre deux poses.';
 }
 function updateFavorite(){
   const saved=favorites.has(selected.id);$('favorite').textContent=saved?'♥':'♡';$('favorite').setAttribute('aria-pressed',String(saved));$('favorite').setAttribute('aria-label',saved?'Retirer cet exercice des favoris':'Ajouter cet exercice aux favoris');$('favorite-count').textContent=String(favorites.size);
@@ -71,6 +73,7 @@ $('motion-mode').addEventListener('change',()=>{player?.setMode($('motion-mode')
 $('reset-view').addEventListener('click',()=>player?.resetView());
 $('zoom-in').addEventListener('click',()=>player?.zoom(.25));$('zoom-out').addEventListener('click',()=>player?.zoom(-.25));
 $('camera-left').addEventListener('click',()=>player?.rotateCamera(-Math.PI/8));$('camera-right').addEventListener('click',()=>player?.rotateCamera(Math.PI/8));
+$('muscle-overlay').addEventListener('change',()=>player?.setMuscleVisibility($('muscle-overlay').checked));
 for(const [id,delta] of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{if(!filtered.length)return;const index=filtered.findIndex(ex=>ex.id===selected.id);choose(filtered[(Math.max(0,index)+delta+filtered.length)%filtered.length]);document.querySelector('.exercise[aria-pressed=true]')?.scrollIntoView({block:'nearest'});});
 window.addEventListener('hashchange',()=>{const ex=catalogue.find(ex=>ex.id===location.hash.slice(1));if(ex)choose(ex,{syncHash:false});});
 window.addEventListener('pagehide',event=>{if(!event.persisted)player?.dispose();});
