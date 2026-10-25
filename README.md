@@ -36,7 +36,7 @@ Les clés Stripe et autres secrets doivent rester dans `.env` et ne jamais être
 
 ## Authentification
 
-L'étape d'authentification complète est incluse : inscription, connexion, JWT court, refresh token en cookie HttpOnly, rotation de session, déconnexion et protection des entraînements. Voir `docs/AUTHENTICATION.md`.
+Le code actuel inclut l’inscription, la connexion, un JWT de 15 minutes, la rotation des refresh tokens et la protection des endpoints de lecture des entraînements. Le Web utilise des cookies HttpOnly ; le mobile utilise SecureStore. Voir [l’analyse de l’authentification](docs/AUTHENTICATION.md) pour le parcours des requêtes, le traitement des secrets et les limites du code actuel.
 
 ## Profil et sécurité (v0.13)
 
@@ -131,3 +131,8 @@ Le workspace `apps/mobile` ajoute une application Expo/React Native avec authent
 ## Final release
 
 This source package is tagged as **MuscuPro Global v1.0.0**. Run `pnpm final:validate` after installing dependencies and before deployment.
+
+
+## Catalogue d’exercices illustrés
+
+L’entrée **Exercices animés** ouvre `/exercises` : 141 fiches et 12 groupes musculaires, avec recherche, filtres et favoris. Votre GIF des **élévations latérales avec haltères** remplace le mannequin et conserve ses images et ses durées, avec pause, vitesse et zoom. Une illustration est disponible ; les autres fiches affichent « illustration à ajouter ». Voir [la documentation du catalogue](docs/EXERCICES_ANIMES.md).
