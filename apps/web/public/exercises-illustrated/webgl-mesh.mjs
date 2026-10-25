@@ -81,13 +81,75 @@ export function addTorso(out,p,color){
   triangle(out,d.pos,d.normal,b.pos,b.normal,c.pos,c.normal,color);
  }
 }
+/**
+ * Localized educational muscle regions. These overlays are broad landmarks,
+ * NOT anatomical insertions or measurements of muscle activation.
+ * Keep base silhouette neutral so only the selected region receives coral.
+ */
+export const regionLabels=Object.freeze({
+ 'Pectoraux':'Poitrine', 'Dos':'Haut du dos', 'Épaules':'Épaules',
+ 'Biceps':'Avant du bras', 'Triceps':'Arrière du bras',
+ 'Quadriceps':'Avant des cuisses', 'Ischio-jambiers':'Arrière des cuisses',
+ 'Fessiers':'Bassin', 'Mollets':'Bas des jambes',
+ 'Abdominaux':'Tronc', 'Cardio':'Repères de mouvement', 'Mobilité':'Articulations mobiles'
+});
+export function addAnatomicalRegionMeshes(out,pose,group,color){
+ if(!regionLabels[group])return;
+ const marker=(p,r)=>addEllipsoid(out,p,r,color,{slices:10,stacks:7});
+ const blend=(a,b,t)=>lerp(a,b,t);
+ const shiftZ=(p,d)=>[p[0],p[1],p[2]+d];
+ const points=['l','r'];
+ switch(group){
+ case 'Pectoraux':
+  for(const side of points){
+   const center=blend(pose[side+'Shoulder'],pose.pelvis,.28);
+   marker(shiftZ(center,.25),[.21,.17,.085]);
+  }break;
+ case 'Dos':
+  for(const side of points){
+   const center=blend(pose[side+'Shoulder'],pose.pelvis,.45);
+   marker(shiftZ(center,-.22),[.17,.26,.075]);
+  }break;
+ case 'Épaules':
+ case 'Mobilité':
+  for(const side of points)marker(pose[side+'Shoulder'],[.185,.16,.16]);
+  break;
+ case 'Biceps':
+ case 'Triceps':
+  for(const side of points){
+   const center=blend(pose[side+'Shoulder'],pose[side+'Elbow'],.47);
+   marker(shiftZ(center,group==='Triceps'?-.13:.12),[.12,.21,.09]);
+  }break;
+ case 'Quadriceps':
+ case 'Ischio-jambiers':
+  for(const side of points){
+   const center=blend(pose[side+'Hip'],pose[side+'Knee'],.45);
+   marker(shiftZ(center,group==='Quadriceps'?.15:-.16),[.16,.23,.10]);
+  }break;
+ case 'Fessiers':
+  for(const side of points)marker(shiftZ(pose[side+'Hip'],-.13),[.19,.20,.12]);
+  break;
+ case 'Mollets':
+  for(const side of points){
+   const center=blend(pose[side+'Knee'],pose[side+'Ankle'],.35);
+   marker(shiftZ(center,-.12),[.13,.22,.09]);
+  }break;
+ case 'Abdominaux':
+  for(const side of points){
+   const center=blend(pose.pelvis,pose.neck,.44);
+   marker([center[0]+(side==='l'?-.11:.11),center[1],center[2]+.24],[.12,.28,.08]);
+  }break;
+ case 'Cardio':
+  // No single cardio muscle: subtle paired movement markers.
+  for(const side of points){
+   marker(pose[side+'Shoulder'],[.11,.11,.11]);
+   marker(blend(pose[side+'Hip'],pose[side+'Knee'],.55),[.12,.13,.11]);
+  }break;
+ }
+}
 /** Complete mesh, regenerable at each frame from the same moving joint map. */
 export function buildAnatomicalMesh(pose,{material='ceramique',showMuscles=true,group=''}={}){
- const out=[],palette=meshPalette(material),muscle=showMuscles;
- const warm=['Pectoraux','Dos','Épaules','Biceps','Triceps','Mobilité'].includes(group);
- const legs=['Quadriceps','Ischio-jambiers','Fessiers','Mollets','Cardio'].includes(group);
- const trunk=['Abdominaux','Fessiers'].includes(group);
- const colored=(region,base)=>muscle&&((region==='arms'&&warm)||(region==='legs'&&legs)||(region==='torso'&&trunk))?palette.muscle:base;
+ const out=[],palette=meshPalette(material);
  for(const key of ['pelvis','neck','head',...['l','r'].flatMap(s=>['Shoulder','Elbow','Wrist','Hip','Knee','Ankle','Toe'].map(v=>s+v))]){
   const point=pose[key];if(!point||point.length!==3||point.some(n=>!Number.isFinite(n)))throw Error('Invalid pose joint: '+key);
  }
@@ -95,23 +157,24 @@ export function buildAnatomicalMesh(pose,{material='ceramique',showMuscles=true,
  const floor=[[-3,-.06,-3],[3,-.06,-3],[3,-.06,3],[-3,-.06,3]],n=[0,1,0],fc=[.93,.95,.98];
  triangle(out,floor[0],n,floor[2],n,floor[1],n,fc);
  triangle(out,floor[0],n,floor[3],n,floor[2],n,fc);
- addTorso(out,pose,colored('torso',palette.body));
+ addTorso(out,pose,palette.body);
  addEllipsoid(out,pose.pelvis,[.39,.28,.26],palette.shorts);
  addTaperedBone(out,pose.neck,pose.head,.15,.105,palette.body,{flatten:.83});
  addEllipsoid(out,pose.head,[.245,.285,.228],palette.head);
  for(const side of ['l','r']){
   const [hip,knee,ankle,toe,shoulder,elbow,wrist]=['Hip','Knee','Ankle','Toe','Shoulder','Elbow','Wrist'].map(part=>pose[side+part]);
-  addTaperedBone(out,hip,knee,.235,.17,colored('legs',palette.body),{flatten:.83});
-  addTaperedBone(out,knee,ankle,.164,.107,colored('legs',palette.body),{flatten:.87});
-  addEllipsoid(out,knee,[.16,.16,.16],colored('legs',palette.joints));
+  addTaperedBone(out,hip,knee,.235,.17,palette.body,{flatten:.83});
+  addTaperedBone(out,knee,ankle,.164,.107,palette.body,{flatten:.87});
+  addEllipsoid(out,knee,[.16,.16,.16],palette.joints);
   addTaperedBone(out,ankle,toe,.095,.13,palette.shoes,{flatten:.73});
   addEllipsoid(out,toe,[.16,.075,.20],palette.shoes);
-  addTaperedBone(out,shoulder,elbow,.178,.125,colored('arms',palette.body),{flatten:.95});
-  addTaperedBone(out,elbow,wrist,.123,.088,colored('arms',palette.body),{flatten:.92});
-  addEllipsoid(out,shoulder,[.19,.19,.18],colored('arms',palette.joints));
+  addTaperedBone(out,shoulder,elbow,.178,.125,palette.body,{flatten:.95});
+  addTaperedBone(out,elbow,wrist,.123,.088,palette.body,{flatten:.92});
+  addEllipsoid(out,shoulder,[.19,.19,.18],palette.joints);
   addEllipsoid(out,elbow,[.126,.13,.13],palette.joints);
   addEllipsoid(out,wrist,[.103,.155,.095],palette.body);
  }
+ if(showMuscles)addAnatomicalRegionMeshes(out,pose,group,palette.muscle);
  return new Float32Array(out);
 }
 /** Column-major matrices suitable for WebGL. */
