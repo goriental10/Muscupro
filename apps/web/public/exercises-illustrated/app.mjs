@@ -76,7 +76,7 @@ $('reset-view').addEventListener('click',()=>player?.resetView());
 $('zoom-in').addEventListener('click',()=>player?.zoom(.25));$('zoom-out').addEventListener('click',()=>player?.zoom(-.25));
 $('camera-left').addEventListener('click',()=>player?.rotateCamera(-Math.PI/8));$('camera-right').addEventListener('click',()=>player?.rotateCamera(Math.PI/8));
 $('muscle-overlay').addEventListener('change',()=>player?.setMuscleVisibility($('muscle-overlay').checked));
-$('figure-style').addEventListener('change',()=>{player?.setFigureStyle($('figure-style').value);$('webgl-fallback').hidden=true;updateMediaDescription();});
+$('figure-style').addEventListener('change',()=>{$('webgl-fallback').hidden=true;player?.setFigureStyle($('figure-style').value);updateMediaDescription();});
 $('mannequin-material').addEventListener('change',()=>player?.setMannequinMaterial($('mannequin-material').value));
 for(const [id,delta] of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{if(!filtered.length)return;const index=filtered.findIndex(ex=>ex.id===selected.id);choose(filtered[(Math.max(0,index)+delta+filtered.length)%filtered.length]);document.querySelector('.exercise[aria-pressed=true]')?.scrollIntoView({block:'nearest'});});
 window.addEventListener('hashchange',()=>{const ex=catalogue.find(ex=>ex.id===location.hash.slice(1));if(ex)choose(ex,{syncHash:false});});
