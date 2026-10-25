@@ -5,6 +5,7 @@
  */
 import {drawAnatomyOverlay} from './anatomy-zones.mjs';
 import {extraSchematics,applyExtraMotion} from './schematic-extra-motions.mjs';
+import {drawReliefSegment,jointShade} from './figure-surface.mjs';
 export const schematicDuration=3600;
 export const schematics=Object.freeze({
   'pectoraux-pompes-classiques':{motion:'pushup',label:'Pompes classiques'},
@@ -275,7 +276,7 @@ export function projectPoint(point,yaw=-.48){
  const rotatedX=x*c-z*s,depth=x*s+z*c;
  return {x:350+rotatedX*116,y:574-y*116+depth*23,depth};
 }
-export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true}={}){
+export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true,figureStyle='relief'}={}){
  const spec=schematics[id];if(!spec)return;
  const p=poseForExercise(id,elapsed/schematicDuration);
  const points=Object.fromEntries(Object.entries(p).map(([key,value])=>[key,projectPoint(value,yaw)]));
@@ -295,6 +296,7 @@ export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true}={}){
  const projected=connections.map(([a,b,width,zone])=>({a:points[a],b:points[b],width,zone,depth:(points[a].depth+points[b].depth)/2})).sort((a,b)=>b.depth-a.depth);
  for(const seg of projected){
   const {a,b,width,zone}=seg;
+  if(figureStyle==='relief'){drawReliefSegment(ctx,seg,zone===highlight);continue;}
   ctx.lineCap='round';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
   ctx.strokeStyle='#354763';ctx.lineWidth=width+5;ctx.stroke();
   ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=zone===highlight?'#9671e8':colors[zone];ctx.lineWidth=width;ctx.stroke();
@@ -303,8 +305,8 @@ export function drawSchematic(ctx,id,elapsed,yaw=-.48,{showMuscles=true}={}){
  const joints=Object.entries(points).sort((a,b)=>b[1].depth-a[1].depth);
  for(const [name,pt] of joints){
   const radius=name==='head'?27:name==='pelvis'?19:name.endsWith('Shoulder')||name.endsWith('Hip')?14:9;
-  const grad=ctx.createRadialGradient(pt.x-5,pt.y-7,2,pt.x,pt.y,radius+3);
-  grad.addColorStop(0,'#c6c4f0');grad.addColorStop(1,name==='head'?'#607293':'#6c579f');
+  const grad=figureStyle==='relief'?jointShade(ctx,name,pt,radius):ctx.createRadialGradient(pt.x-5,pt.y-7,2,pt.x,pt.y,radius+3);
+  if(figureStyle!=='relief'){grad.addColorStop(0,'#c6c4f0');grad.addColorStop(1,name==='head'?'#607293':'#6c579f');}
   ctx.fillStyle=grad;ctx.beginPath();ctx.arc(pt.x,pt.y,radius,0,TAU);ctx.fill();
  }
  if(showMuscles)drawAnatomyOverlay(ctx,points,id);
