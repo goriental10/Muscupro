@@ -20,7 +20,7 @@ $('illustrated-tab').textContent='Animés · '+$('media-count').textContent;
 function showError(message){$('canvas-error').hidden=!message;$('canvas-error-message').textContent=message;}
 function updatePlayback(){if(!player)return;$('play').replaceChildren(document.createTextNode(player.playing?'Ⅱ ':'▶ '));const span=document.createElement('span');span.textContent=player.playing?'Pause':'Lecture';$('play').append(span);$('play').setAttribute('aria-pressed',String(!player.playing));}
 try{
-  player=new IllustrationPlayer($('viewport'),{onPhase:phase=>{$('timeline').value=String(Math.round(phase*1000));$('phase').textContent=`${Math.round(phase*100)} %`;},onStatus:showError,onMovement:label=>{$('movement-phase').textContent=label;},onAvailability:available=>document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=!available;})});
+  player=new IllustrationPlayer($('viewport'),{onPhase:phase=>{$('timeline').value=String(Math.round(phase*1000));$('phase').textContent=`${Math.round(phase*100)} %`;},onStatus:showError,onMovement:label=>{$('movement-phase').textContent=label;},onAvailability:available=>document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=!available;}),onRenderFallback:()=>{$('figure-style').value='mannequin';$('webgl-fallback').hidden=false;updateMediaDescription();}});
   updatePlayback();
 }catch(error){showError(error.message);document.querySelectorAll('[data-requires-media]').forEach(control=>{control.disabled=true;});}
 function updateMediaDescription(){
@@ -28,9 +28,9 @@ function updateMediaDescription(){
   $('motion-mode').disabled=!media;
   for(const control of document.querySelectorAll('[data-schematic]'))control.hidden=!schematic;
   $('anatomy-zone').textContent=schematic?(anatomicalZoneForId(selected.id)?.label??'Zone musculaire illustrative'):'';
-  $('mannequin-material-control').hidden=!schematic||$('figure-style').value!=='mannequin';
-  $('family-label').textContent=schematic?'Mannequin animé (simulation)':!media?'Animation à ajouter':natural?'Illustration articulée':'GIF d’origine';
-  $('media-description').textContent=schematic?'Démonstration animée avec mannequin illustré, articulations 3D projetées et vues orientables. Le rendu est stylisé, sans maillage anatomique 3D ni validation biomécanique.':!media?'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.':natural?'Votre illustration animée aux articulations : montée de 1,45 s, descente de 2,05 s. Les bras parcourent le mouvement, le buste et les pieds restent stables.':'Le fichier fourni, avec ses 12 images et ses fondus entre deux poses.';
+  $('mannequin-material-control').hidden=!schematic||!['mannequin','webgl'].includes($('figure-style').value);
+  $('family-label').textContent=schematic?($('figure-style').value==='webgl'?'Modèle 3D WebGL expérimental':'Mannequin animé (simulation)'):!media?'Animation à ajouter':natural?'Illustration articulée':'GIF d’origine';
+  $('media-description').textContent=schematic?($('figure-style').value==='webgl'?'Véritable maillage triangulé 3D, éclairage dynamique et caméra libre. Les mouvements articulaires restent des simulations pédagogiques, non validées biomécaniquement.':'Mannequin illustré avec articulations 3D projetées sur un Canvas 2D. Rendu stylisé, non validé biomécaniquement.'):!media?'Cette fiche est conservée dans le catalogue. Son illustration correspondant au mouvement reste à fournir.':natural?'Votre illustration animée aux articulations : montée de 1,45 s, descente de 2,05 s. Les bras parcourent le mouvement, le buste et les pieds restent stables.':'Le fichier fourni, avec ses 12 images et ses fondus entre deux poses.';
 }
 function updateFavorite(){
   const saved=favorites.has(selected.id);$('favorite').textContent=saved?'♥':'♡';$('favorite').setAttribute('aria-pressed',String(saved));$('favorite').setAttribute('aria-label',saved?'Retirer cet exercice des favoris':'Ajouter cet exercice aux favoris');$('favorite-count').textContent=String(favorites.size);
@@ -76,7 +76,7 @@ $('reset-view').addEventListener('click',()=>player?.resetView());
 $('zoom-in').addEventListener('click',()=>player?.zoom(.25));$('zoom-out').addEventListener('click',()=>player?.zoom(-.25));
 $('camera-left').addEventListener('click',()=>player?.rotateCamera(-Math.PI/8));$('camera-right').addEventListener('click',()=>player?.rotateCamera(Math.PI/8));
 $('muscle-overlay').addEventListener('change',()=>player?.setMuscleVisibility($('muscle-overlay').checked));
-$('figure-style').addEventListener('change',()=>{player?.setFigureStyle($('figure-style').value);$('mannequin-material-control').hidden=$('figure-style').value!=='mannequin'||!schematics[selected.id];});
+$('figure-style').addEventListener('change',()=>{player?.setFigureStyle($('figure-style').value);$('webgl-fallback').hidden=true;updateMediaDescription();});
 $('mannequin-material').addEventListener('change',()=>player?.setMannequinMaterial($('mannequin-material').value));
 for(const [id,delta] of [['previous',-1],['next',1]])$(id).addEventListener('click',()=>{if(!filtered.length)return;const index=filtered.findIndex(ex=>ex.id===selected.id);choose(filtered[(Math.max(0,index)+delta+filtered.length)%filtered.length]);document.querySelector('.exercise[aria-pressed=true]')?.scrollIntoView({block:'nearest'});});
 window.addEventListener('hashchange',()=>{const ex=catalogue.find(ex=>ex.id===location.hash.slice(1));if(ex)choose(ex,{syncHash:false});});
