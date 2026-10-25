@@ -9,7 +9,7 @@ L’entrée **Exercices animés** ouvre `/exercises`. La version autonome est di
 - **48 mouvements 3D schématiques** : quatre exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires, en trois dimensions, projetée sur un Canvas 2D orientable.
 - **92 exercices** n’ont pas encore d’animation propre : ils restent dans l’onglet « Tous », affichent clairement « À illustrer », sans recycler le média d’un autre exercice.
 
-Les 48 animations sont des **représentations de développement simplifiées**, pas des scans anatomiques 3D, de la capture de mouvements ni des démonstrations biomécaniquement validées. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
+Les 48 animations possèdent maintenant un **mode WebGL avec de véritables surfaces triangulées 3D**, plus un retour au mannequin 2D en cas d’indisponibilité graphique. Les mouvements restent des **simulations simplifiées**, sans capture de mouvements, maillage médical, mesure musculaire ou validation biomécanique. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
 
 ## Exercices disposant d’un modèle 3D schématique
 
@@ -28,7 +28,7 @@ Les 48 animations sont des **représentations de développement simplifiées**, 
 | Cardio | Marche active ; Jumping jack adapté ; Course légère ; Montée de marche |
 | Mobilité | Cercles des épaules ; Chat-vache ; Rotation thoracique à quatre pattes ; Balancement de cheville |
 
-Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Le sélecteur **Rendu** propose désormais **Mannequin réaliste stylisé** (par défaut : formes continues, torse et membres effilés, tête, mains, pieds, vêtements simples et nuances d'ombrage), **Relief ombré** (ancien volume en capsules) et **Structure articulée** (ancien tracé). Le mode mannequin comporte deux finitions : **Céramique naturelle** et **Ardoise bleutée**, sans assigner d'attributs à une personne réelle. Les 48 animations continuent d'utiliser leurs trajectoires de points 3D, projetées en 2D. Il ne s'agit pas d'un maillage anatomique 3D, d'une capture de mouvements ou d'une anatomie biomécaniquement validée. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
+Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Le sélecteur **Rendu** propose désormais **3D interactif (WebGL)** (par défaut), **Mannequin réaliste stylisé** (2D à contours arrondis, torse et membres effilés, tête, mains, pieds et vêtements neutres), **Relief ombré** (ancien volume en capsules) et **Structure articulée** (ancien tracé). Le mode mannequin comporte deux finitions : **Céramique naturelle** et **Ardoise bleutée**, sans assigner d'attributs à une personne réelle. Les 48 animations continuent d'utiliser leurs trajectoires de points 3D. En **WebGL**, ces points construisent des surfaces triangulées (torse, tête, membres et articulations) avec normales, matériaux, éclairage et une caméra qui tourne autour du corps et s'incline. Le moteur ne télécharge aucun modèle ni bibliothèque externe. Les trois rendus plus anciens utilisent une projection sur Canvas 2D. En absence de WebGL ou en cas de perte du contexte graphique, le lecteur bascule vers le mannequin 2D avec un message d'état. Le rendu WebGL est un **maillage procédural approximatif**, pas une anatomie de précision ni une capture de mouvements. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
 
 ## Illustration originale
 
@@ -40,7 +40,7 @@ La mise en évidence des épaules présente dans le GIF provient directement du 
 
 Recherche insensible aux accents ; filtrage par groupe musculaire et équipement ; onglets **Tous**, **Animés** et **Favoris** ; favoris stockés localement sous forme d'identifiants ; lien direct vers une fiche ; lecture/pause ; position de lecture ; vitesse ; zoom et recentrage.
 
-Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'animation lorsqu'il quitte l'écran ou que l'onglet est masqué, et libère les observateurs/événements lors de la fermeture. Aucun nouveau service externe, compte, jeton, WebGL, migration ou dépendance tierce n'est requis pour cette étape.
+Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'animation lorsqu'il quitte l'écran ou que l'onglet est masqué, et libère les observateurs/événements lors de la fermeture. Aucun nouveau service externe, compte, jeton, migration ou dépendance tierce n'est requis pour cette étape. **WebGL est optionnel** : la version Canvas 2D reste fonctionnelle lorsque l'appareil ne permet pas le rendu WebGL.
 
 ## Architecture
 
@@ -53,7 +53,9 @@ Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'an
 | `schematic-extra-motions.mjs` | 12 mouvements schématiques de la troisième série |
 | `schematic-fourth-motions.mjs` | 12 mouvements supplémentaires, un par groupe |
 | `figure-surface.mjs` | Ancien effet de relief ombré et palette de surfaces non anatomiques |
-| `mannequin-renderer.mjs` | Rendu de mannequin à formes organiques, silhouettes arrondies et deux finitions |
+| `mannequin-renderer.mjs` | Mannequin 2D de repli avec formes arrondies et deux finitions |
+| `webgl-mesh.mjs` | Surfaces 3D triangulées, normales, maillages d'articulations, caméra et perspective |
+| `webgl-mannequin.mjs` | Moteur WebGL temps réel, éclairage, géométrie animée et gestion du contexte |
 | `anatomy-zones.mjs` | 12 zones musculaires indicatives et leurs mises en évidence |
 | `illustration-player.mjs` | Lecture Canvas, contrôle caméra et visibilité des zones |
 | `app.mjs`, `index.html`, `styles.css` | Navigation, commandes, état et interface responsive |
@@ -70,6 +72,6 @@ pnpm --filter @muscupro/web typecheck
 pnpm --filter @muscupro/web build
 ```
 
-Les suites Node contrôlent aussi les silhouettes du mannequin pour les 48 schémas (deux finitions), le maintien des deux rendus précédents, les 48 schémas 3D, les 49 associations de médias et les 92 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
+Les suites Node contrôlent aussi les maillages WebGL de 48 mouvements sur plusieurs phases (surfaces triangulées, coordonnées et normales finies, éclairages par région et matrices de caméra), et les silhouettes du mannequin 2D de secours (deux finitions), le maintien des deux rendus précédents, les 48 schémas 3D, les 49 associations de médias et les 92 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
 
-Un aperçu Web est prévu dans les déploiements de branche Vercel. Les tests automatiques et une prévisualisation ne remplacent pas une vérification fonctionnelle sur iPhone/Android ni une expertise en biomécanique. La production et la branche `main` ne sont pas modifiées par cette étape.
+Un aperçu Web est disponible dans les déploiements de branche Vercel. L'exécution de vrais contextes WebGL et les essais de performances / manipulation tactile sur iPhone et Android restent à tester manuellement : les tests Node valident le générateur de géométrie mais ne simulent pas le GPU. Les tests automatiques et une prévisualisation ne remplacent pas une vérification fonctionnelle sur iPhone/Android ni une expertise en biomécanique. La production et la branche `main` ne sont pas modifiées par cette étape.
