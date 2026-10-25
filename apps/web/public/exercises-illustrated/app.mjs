@@ -16,6 +16,7 @@ for(const [id,values] of [['category',categories],['equipment',equipmentTypes]])
   for(const value of values){const option=document.createElement('option');option.value=value;option.textContent=value;$(id).append(option);}
 }
 $('total-count').textContent=String(catalogue.length);$('group-count').textContent=String(categories.length-1);$('media-count').textContent=String(Object.keys(illustrations).length+Object.keys(schematics).length);
+$('illustrated-tab').textContent='Animés · '+$('media-count').textContent;
 function showError(message){$('canvas-error').hidden=!message;$('canvas-error-message').textContent=message;}
 function updatePlayback(){if(!player)return;$('play').replaceChildren(document.createTextNode(player.playing?'Ⅱ ':'▶ '));const span=document.createElement('span');span.textContent=player.playing?'Pause':'Lecture';$('play').append(span);$('play').setAttribute('aria-pressed',String(!player.playing));}
 try{
@@ -37,7 +38,7 @@ function choose(exercise,{syncHash=true}={}){
   selected=exercise;player?.setIllustration(illustrations[exercise.id],exercise);
   $('exercise-name').textContent=exercise.name;$('exercise-meta').textContent=exercise.equipment;$('exercise-category').textContent=exercise.group.toLocaleUpperCase('fr-CA');updateMediaDescription();
   $('exercise-index').textContent=`${String(catalogue.indexOf(exercise)+1).padStart(3,'0')} / ${catalogue.length}`;
-  $('viewport').setAttribute('aria-label',`${exercise.name}, démonstration animée. Utiliser les boutons pour zoomer et contrôler la lecture.`);
+  $('viewport').setAttribute('aria-label',`${exercise.name}, démonstration animée. Utiliser les commandes pour la lecture et le zoom. Pour les schémas 3D, tourner la vue avec les flèches gauche et droite.`);
   if(syncHash)history.replaceState(null,'',`${location.pathname}${location.search}#${exercise.id}`);
   updateFavorite();
   document.querySelectorAll('.exercise').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.id===selected.id)));
