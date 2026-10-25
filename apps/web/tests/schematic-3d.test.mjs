@@ -5,10 +5,11 @@ import { illustrations } from '../public/exercises-illustrated/illustrations.mjs
 import { schematics, schematicDuration, poseForExercise, phaseAmount, skeletonConnections, projectPoint, drawSchematic } from '../public/exercises-illustrated/schematic-3d.mjs';
 import { anatomicalZones, anatomicalZoneForId, groupForSchematicId } from '../public/exercises-illustrated/anatomy-zones.mjs';
 import { extraSchematics,applyExtraMotion } from '../public/exercises-illustrated/schematic-extra-motions.mjs';
+import { fourthSchematics,applyFourthMotion } from '../public/exercises-illustrated/schematic-fourth-motions.mjs';
 import { figureStyles,segmentGradientStops } from '../public/exercises-illustrated/figure-surface.mjs';
 
 test('3D schematics are associated to distinct real catalogue exercises',()=>{
- assert.equal(Object.keys(schematics).length,36);
+ assert.equal(Object.keys(schematics).length,48);
  const groupSet=new Set();
  for(const [id,model] of Object.entries(schematics)){
   const ex=catalogue.find(e=>e.id===id);
@@ -51,7 +52,7 @@ test('each exercise has a changing movement and a loop without discontinuity',()
   }
   poses.push(JSON.stringify(first));
  }
- assert.equal(new Set(poses).size,36,'every movement should have its own modelled pose');
+ assert.equal(new Set(poses).size,48,'every movement should have its own modelled pose');
 });
 
 test('all 12 muscle groups provide nonempty illustrative overlays',()=>{
@@ -91,4 +92,33 @@ test('relief visual style offers multiple depth-shading palettes',()=>{
   assert.equal(segmentGradientStops(zone).length,4);
   assert.equal(segmentGradientStops(zone,true).length,4);
  }
+});
+
+test('fourth motion batch contains 12 original movement types and one new exercise per group',()=>{
+ const ids=Object.keys(fourthSchematics);
+ assert.equal(ids.length,12);
+ const groups=new Set();
+ const types=new Set(Object.values(fourthSchematics).map(x=>x.motion));
+ assert.equal(types.size,12);
+ for(const [id,spec] of Object.entries(fourthSchematics)){
+  const exercise=catalogue.find(x=>x.id===id);
+  assert.ok(exercise,'exercise not in catalogue: '+id);
+  assert.equal(exercise.name,spec.label);
+  assert.equal(illustrations[id],undefined,'original GIF must stay exercise-specific');
+  assert.equal(extraSchematics[id],undefined,'third batch must stay separate');
+  groups.add(exercise.group);
+  assert.ok(anatomicalZoneForId(id));
+  assert.notDeepEqual(poseForExercise(id,.25),poseForExercise(id,.5),'must animate '+id);
+ }
+ assert.equal(groups.size,12);
+ assert.throws(()=>applyFourthMotion('unknown',0,{}));
+ assert.throws(()=>applyFourthMotion('kneePushup',Number.NaN,{}));
+});
+test('all 48 schematic animations and the original form 49 distinct media associations',()=>{
+ const illustrated=new Set(Object.keys(illustrations));
+ const animated=new Set([...illustrated,...Object.keys(schematics)]);
+ assert.equal(animated.size,49);
+ assert.equal(catalogue.length,141);
+ for(const id of animated)assert.ok(catalogue.some(e=>e.id===id),id);
+ assert.equal(catalogue.length-animated.size,92);
 });
