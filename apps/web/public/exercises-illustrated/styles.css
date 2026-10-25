@@ -3,3 +3,10 @@
 .stage{height:510px;background:#fff}.stage canvas{background:#fff}.stage-bottom>span{color:#fff;background:#192437bf}.stage-index{color:#68778b}.canvas-error{background:#f8f9fdf5;color:#40516b;border-color:#d5dce7}.illustration-source{font-size:10px;color:#a2b3cc}.library-tabs button{padding-left:5px;padding-right:5px;font-size:10px}.viewer-heading h2{max-width:650px}.stage canvas:active{cursor:move}@media(max-width:480px){.stage{height:380px}.viewer-heading h2{font-size:20px}.live-badge{font-size:7px}}
 
 .motion-select{display:flex;align-items:center;gap:10px;color:#a2b3cc;font-size:10px}.motion-select select{border:1px solid #38465d;border-radius:7px;background:#172338;color:#edf0fa;padding:8px;font-size:11px;max-width:165px}.movement-phase{color:#b4a2ff;font-size:10px;min-width:80px}.view-controls{flex-wrap:wrap}@media(max-width:480px){.motion-select{gap:5px;font-size:9px}.motion-select select{max-width:142px;font-size:10px}.movement-phase{min-width:0;font-size:9px}.view-controls .text-button{font-size:10px}}
+
+/* Anatomy overlay controls - visible only when a schematic 3D demonstration is selected. */
+.view-controls [hidden]{display:none!important}
+#anatomy-panel{display:inline-flex;align-items:center;gap:7px;flex-wrap:wrap;padding:8px 10px;border:1px solid #3b465e;border-radius:8px;background:#19243a;cursor:pointer}
+#anatomy-panel input{cursor:pointer;flex-shrink:0}
+.anatomy-zone{color:#ffafa3;font-weight:600;font-size:10px;max-width:180px;line-height:1.4}
+@media(max-width:480px){#anatomy-panel{font-size:10px}.anatomy-zone{max-width:150px;font-size:9px}}
