@@ -1,71 +1,71 @@
-# Catalogue illustré d’exercices
+# MuscuPro Global — catalogue d’exercices animés
 
-L’entrée **Exercices animés** ouvre `/exercises`. Le lecteur autonome est disponible à `/exercises-illustrated/index.html`.
+L’entrée **Exercices animés** ouvre `/exercises`. La version autonome est disponible à `/exercises-illustrated/index.html`.
 
-## État du contenu
+## Couverture des médias
 
-Le catalogue comporte **141 fiches dans 12 groupes musculaires**. Une illustration animée est actuellement fournie : **Élévations latérales avec haltères**. L’onglet **Illustrés** est sélectionné au démarrage pour ouvrir immédiatement ce média. L’onglet **Tous** conserve les autres fiches et affiche « illustration à ajouter » lorsqu’aucun média correspondant n’est disponible.
+- **141 exercices** dans **12 groupes**.
+- **1 illustration d’origine** fournie pour les **élévations latérales avec haltères** : 12 images, GIF inchangé, 700 × 700 px, boucle de 3 secondes.
+- **24 mouvements 3D schématiques** : deux exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires, en trois dimensions, projetée sur un Canvas 2D orientable.
+- **116 exercices** n’ont pas encore d’animation propre : ils restent dans l’onglet « Tous », affichent clairement « À illustrer », sans recycler le média d’un autre exercice.
 
-Les mannequins procéduraux ont été retirés du lecteur. Le GIF des élévations latérales n’est jamais réutilisé pour représenter un squat, un curl ou un autre mouvement. Les appareils et les vues 3D n’apparaissent plus parmi les commandes.
+Les 24 animations sont des **représentations de développement simplifiées**, pas des scans anatomiques 3D, de la capture de mouvements ni des démonstrations biomécaniquement validées. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
 
-## Illustration fournie
+## Exercices disposant d’un modèle 3D schématique
 
-- Fichier original : `elevations-laterales-exercice-musculation-1.gif`, conservé sans modification.
-- 700 × 700 pixels, 12 images, boucle de 3 secondes.
-- Durées des images en millisecondes : `1000, 100, 100, 100, 100, 100, 1000, 100, 100, 100, 100, 100`.
-- Une planche WebP sans perte contient les images compositées du GIF. Chaque image a été comparée pixel par pixel à l’original. Le mode **GIF d’origine** restitue ces images et leurs durées, sans modification des fichiers.
+| Groupe | Exercices |
+| --- | --- |
+| Pectoraux | Pompes classiques ; Pompes inclinées |
+| Dos | Rowing à un bras avec haltère ; Tirage vertical devant |
+| Épaules | Développé épaules ; Élévations frontales avec haltères |
+| Biceps | Curl marteau ; Curl alterné |
+| Triceps | Extension triceps à la poulie ; Extension au-dessus de la tête |
+| Quadriceps | Squat ; Fentes avant |
+| Ischio-jambiers | Soulevé de terre roumain ; Leg curl debout |
+| Fessiers | Pont fessier au sol ; Kickback à quatre pattes |
+| Mollets | Extensions mollets debout ; Extensions mollets sur une jambe |
+| Abdominaux | Crunch abdominal ; Planche latérale |
+| Cardio | Marche active ; Jumping jack adapté |
+| Mobilité | Cercles des épaules ; Chat-vache |
 
-## Mouvement continu
+Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
 
-Le mode **Mouvement fluide**, sélectionné par défaut, remplace les fondus entre les deux poses du GIF par une animation articulée. Le dessin reste celui fourni : le lecteur utilise des découpes des deux poses nettes, sans dessiner de mannequin ni superposer deux positions de bras.
+## Illustration originale
 
-- Montée de 1,45 s, transition haute de 0,18 s, descente de 2,05 s, transition basse de 0,22 s : une boucle de 3,9 s à vitesse ×1.
-- Une courbe quintique annule la vitesse et l’accélération aux changements de direction. La descente est plus lente que la montée.
-- Les segments des bras gardent une longueur constante dans le calcul spatial ; leur projection produit le raccourcissement visuel. Les épaules se soulèvent légèrement et les coudes restent légèrement fléchis.
-- Les mains et les haltères sont des pièces rigides alignées avec les avant-bras. Le buste et les pieds restent fixes.
-- Le sélecteur **Animation** permet de comparer avec le GIF d’origine sans perdre la progression, la vitesse ou la pause.
+Le GIF `assets/elevations-laterales-exercice-musculation-1.gif` est conservé sans modification et associé exclusivement à la fiche des élévations latérales. Ses douze images ont été compositées dans la planche WebP utilisée par le lecteur. Deux modes d’affichage existent : **GIF d’origine** avec les temporisations fournies et **Mouvement fluide** avec une reconstruction visuelle articulée en 2D (montée 1,45 s, descente 2,05 s, transitions 0,18 et 0,22 s). Cette reconstruction n'est pas non plus un modèle anatomique 3D.
 
-Il s’agit d’une reconstruction visuelle en 2D à partir d’une illustration, avec des angles de vue et des détails limités par la source. Ce n’est pas une capture de mouvement ni un modèle anatomique 3D. Seules les élévations latérales disposent de cette animation ; les autres fiches gardent leur état « illustration à ajouter ».
+La mise en évidence des épaules présente dans le GIF provient directement du média fourni ; l'interrupteur de zones musculaires ne s'applique qu'aux **24 schémas 3D**, pas à cette illustration.
 
-Le fichier `illustrations.mjs` associe chaque média à un identifiant précis du catalogue. Ajouter d’autres illustrations demande un fichier et une entrée correspondant à chaque exercice. Aucune validation sportive ou attribution de licence supplémentaire n’est déduite de la présence du fichier fourni.
+## Fonctionnalités
 
-## Fonctions
+Recherche insensible aux accents ; filtrage par groupe musculaire et équipement ; onglets **Tous**, **Animés** et **Favoris** ; favoris stockés localement sous forme d'identifiants ; lien direct vers une fiche ; lecture/pause ; position de lecture ; vitesse ; zoom et recentrage.
 
-Recherche sans accents, filtres par groupe et matériel, onglets Tous/Illustrés/Favoris, favoris conservés localement, lien direct par fragment URL, lecture/pause, vitesse ×0,5 à ×2, parcours manuel du cycle, zoom et recentrage. Le mode fluide affiche aussi la phase en cours (montée, descente ou transition). La mise en évidence des épaules provient du GIF original : elle ne dispose pas d’un interrupteur artificiel.
-
-Le lecteur respecte `prefers-reduced-motion` au démarrage, suspend l’animation hors écran ou lorsque l’onglet est masqué et libère ses événements/observateurs à la fermeture. Le zoom permet de déplacer l’illustration par glissement ou avec les flèches du clavier. Les boutons +/− et le curseur disposent de libellés accessibles.
+Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'animation lorsqu'il quitte l'écran ou que l'onglet est masqué, et libère les observateurs/événements lors de la fermeture. Aucun nouveau service externe, compte, jeton, WebGL, migration ou dépendance tierce n'est requis pour cette étape.
 
 ## Architecture
 
 | Fichier dans `apps/web/public/exercises-illustrated/` | Fonction |
 | --- | --- |
-| `catalog.mjs` | Les 141 noms, groupes, matériels et les filtres |
-| `illustrations.mjs` | Correspondances des médias, durées et calcul de l’image à afficher |
-| `illustration-player.mjs` | Modes fluide/original dans Canvas 2D, zoom et cycle de vie |
-| `illustration-motion.mjs` | Cycle continu, articulations, projection et découpes du dessin |
-| `app.mjs` | Sélection, recherche, favoris et commandes |
-| `index.html`, `styles.css` | Interface responsive autonome |
-| `assets/` | GIF original et planche WebP sans perte |
+| `catalog.mjs` | Catalogue de 141 fiches, identifiants stables et filtres |
+| `illustrations.mjs` | Lien strict avec le média original et les durées des images |
+| `illustration-motion.mjs` | Animation 2D articulée issue du dessin fourni |
+| `schematic-3d.mjs` | 24 mouvements 3D schématiques, modèles articulaires, projection et rendu |
+| `anatomy-zones.mjs` | 12 zones musculaires indicatives et leurs mises en évidence |
+| `illustration-player.mjs` | Lecture Canvas, contrôle caméra et visibilité des zones |
+| `app.mjs`, `index.html`, `styles.css` | Navigation, commandes, état et interface responsive |
 
-La page Next.js `src/app/exercises/page.tsx` embarque le lecteur dans une iframe de même origine. Cette isolation conserve les styles du reste de l’application. Aucun WebGL, dépendance supplémentaire, compte, clé API ou migration n’est nécessaire. Ce catalogue est public et ses favoris stockent uniquement des identifiants d’exercices, pas de jetons d’authentification. L’historique des séances n’est pas modifié.
+La page Next.js `src/app/exercises/page.tsx` embarque le lecteur dans une iframe de même origine.
 
-## Lancer et vérifier
+## Vérification
 
-Dans l’application : démarrer le workspace Web puis ouvrir `/exercises`.
-
-Sans installer Next.js :
+Depuis la racine du dépôt :
 
 ```bash
-cd apps/web/public/exercises-illustrated
-python3 -m http.server 8000
+pnpm --filter @muscupro/web test
+pnpm --filter @muscupro/web typecheck
+pnpm --filter @muscupro/web build
 ```
 
-Ouvrir `http://localhost:8000` ; les modules ES doivent être servis en HTTP.
+Les suites Node contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
 
-```bash
-node --test apps/web/tests/exercises-illustrated.test.mjs
-```
-
-Ces sept tests sont aussi lancés par le script Web `test` en CI. Ils vérifient l’intégrité du GIF original, sa correspondance avec le bon exercice, les temporisations et la boucle du mode original, les filtres et quelques régressions de matériel. Pour le mode fluide, ils contrôlent les transitions, la continuité du cycle, les longueurs des segments, les limites des trajectoires et le raccordement des découpes aux articulations.
-
-Les poses basse, intermédiaire et haute, les deux modes, les commandes, l’état « illustration à ajouter » et une largeur mobile sont vérifiés dans le navigateur. Le test responsive utilise une iframe ; il ne remplace pas un essai tactile sur appareil réel. La CI du dépôt exécute l’installation figée, le typage, les tests et le build avec les versions déclarées dans le lockfile.
+Un aperçu Web est prévu dans les déploiements de branche Vercel. Les tests automatiques et une prévisualisation ne remplacent pas une vérification fonctionnelle sur iPhone/Android ni une expertise en biomécanique. La production et la branche `main` ne sont pas modifiées par cette étape.
