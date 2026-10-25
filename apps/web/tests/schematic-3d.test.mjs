@@ -6,11 +6,12 @@ import { schematics, schematicDuration, poseForExercise, phaseAmount, skeletonCo
 import { anatomicalZones, anatomicalZoneForId, groupForSchematicId } from '../public/exercises-illustrated/anatomy-zones.mjs';
 import { extraSchematics,applyExtraMotion } from '../public/exercises-illustrated/schematic-extra-motions.mjs';
 import { fourthSchematics,applyFourthMotion } from '../public/exercises-illustrated/schematic-fourth-motions.mjs';
+import {fifthSchematics,applyFifthMotion} from '../public/exercises-illustrated/schematic-fifth-motions.mjs';
 import { figureStyles,segmentGradientStops } from '../public/exercises-illustrated/figure-surface.mjs';
 import {mannequinMaterials,mannequinPalette,drawMannequin,drawTaperedLimb,drawMannequinTrunk} from '../public/exercises-illustrated/mannequin-renderer.mjs';
 
 test('3D schematics are associated to distinct real catalogue exercises',()=>{
- assert.equal(Object.keys(schematics).length,48);
+ assert.equal(Object.keys(schematics).length,60);
  const groupSet=new Set();
  for(const [id,model] of Object.entries(schematics)){
   const ex=catalogue.find(e=>e.id===id);
@@ -53,7 +54,7 @@ test('each exercise has a changing movement and a loop without discontinuity',()
   }
   poses.push(JSON.stringify(first));
  }
- assert.equal(new Set(poses).size,48,'every movement should have its own modelled pose');
+ assert.equal(new Set(poses).size,60,'every movement should have its own modelled pose');
 });
 
 test('all 12 muscle groups provide nonempty illustrative overlays',()=>{
@@ -120,10 +121,10 @@ test('fourth motion batch contains 12 original movement types and one new exerci
 test('all 48 schematic animations and the original form 49 distinct media associations',()=>{
  const illustrated=new Set(Object.keys(illustrations));
  const animated=new Set([...illustrated,...Object.keys(schematics)]);
- assert.equal(animated.size,49);
+ assert.equal(animated.size,61);
  assert.equal(catalogue.length,141);
  for(const id of animated)assert.ok(catalogue.some(e=>e.id===id),id);
- assert.equal(catalogue.length-animated.size,92);
+ assert.equal(catalogue.length-animated.size,80);
 });
 
 test('mannequin has two independent material palettes and organic silhouette',()=>{
@@ -141,4 +142,24 @@ test('mannequin has two independent material palettes and organic silhouette',()
  assert.ok(calls.bezier>20,'smooth, tapered transitions are drawn');
  assert.ok(calls.quadratic>20,'torso and limb curves are drawn');
  assert.ok(calls.ellipse>10,'head, hands, feet and joints are rendered');
+});
+
+test('fifth set has 12 unique exercise-specific loops in all groups',()=>{
+ assert.equal(Object.keys(fifthSchematics).length,12);
+ const groups=new Set(),types=new Set();
+ for(const [id,spec] of Object.entries(fifthSchematics)){
+  const exercise=catalogue.find(x=>x.id===id);
+  assert.ok(exercise,'missing exercise: '+id);
+  assert.equal(exercise.name,spec.label);
+  assert.ok(!illustrations[id]&&!extraSchematics[id]&&!fourthSchematics[id]);
+  groups.add(exercise.group);types.add(spec.motion);
+  const before=poseForExercise(id,1-1e-5),atStart=poseForExercise(id,0);
+  for(const key of Object.keys(before)){
+   assert.ok(Math.hypot(...before[key].map((x,i)=>x-atStart[key][i]))<.015,id+' discontinuous movement: '+key);
+  }
+  assert.notDeepEqual(poseForExercise(id,.24),poseForExercise(id,.50));
+ }
+ assert.equal(groups.size,12);assert.equal(types.size,12);
+ assert.throws(()=>applyFifthMotion('invalid',0,{}));
+ assert.throws(()=>applyFifthMotion('floorPress',Number.NaN,{}));
 });
