@@ -4,9 +4,11 @@ import { catalogue } from '../public/exercises-illustrated/catalog.mjs';
 import { illustrations } from '../public/exercises-illustrated/illustrations.mjs';
 import { schematics, schematicDuration, poseForExercise, phaseAmount, skeletonConnections, projectPoint, drawSchematic } from '../public/exercises-illustrated/schematic-3d.mjs';
 import { anatomicalZones, anatomicalZoneForId, groupForSchematicId } from '../public/exercises-illustrated/anatomy-zones.mjs';
+import { extraSchematics,applyExtraMotion } from '../public/exercises-illustrated/schematic-extra-motions.mjs';
+import { figureStyles,segmentGradientStops } from '../public/exercises-illustrated/figure-surface.mjs';
 
 test('3D schematics are associated to distinct real catalogue exercises',()=>{
- assert.equal(Object.keys(schematics).length,24);
+ assert.equal(Object.keys(schematics).length,36);
  const groupSet=new Set();
  for(const [id,model] of Object.entries(schematics)){
   const ex=catalogue.find(e=>e.id===id);
@@ -49,7 +51,7 @@ test('each exercise has a changing movement and a loop without discontinuity',()
   }
   poses.push(JSON.stringify(first));
  }
- assert.equal(new Set(poses).size,24,'every movement should have its own modelled pose');
+ assert.equal(new Set(poses).size,36,'every movement should have its own modelled pose');
 });
 
 test('all 12 muscle groups provide nonempty illustrative overlays',()=>{
@@ -64,7 +66,29 @@ test('schematics render with and without overlay, without relying on a browser',
  const gradient=()=>({addColorStop(){}});
  const ctx={save(){},restore(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},arc(){},fill(){},fillText(){},ellipse(){},createLinearGradient:gradient,createRadialGradient:gradient};
  for(const id of Object.keys(schematics)){
-  assert.doesNotThrow(()=>drawSchematic(ctx,id,725,.2,{showMuscles:true}),id+' overlay');
-  assert.doesNotThrow(()=>drawSchematic(ctx,id,925,-.8,{showMuscles:false}),id+' no overlay');
+  assert.doesNotThrow(()=>drawSchematic(ctx,id,725,.2,{showMuscles:true,figureStyle:'relief'}),id+' shaded overlay');
+  assert.doesNotThrow(()=>drawSchematic(ctx,id,925,-.8,{showMuscles:false,figureStyle:'structure'}),id+' original structure');
+ }
+});
+
+test('12 additional movements have distinct IDs and one model per catalogue group',()=>{
+ assert.equal(Object.keys(extraSchematics).length,12);
+ const groups=new Set();
+ for(const [id,spec] of Object.entries(extraSchematics)){
+  const matching=catalogue.find(item=>item.id===id);
+  assert.ok(matching,id);
+  assert.equal(matching.name,spec.label);
+  groups.add(matching.group);
+  assert.doesNotThrow(()=>poseForExercise(id,.37));
+ }
+ assert.equal(groups.size,12);
+ assert.equal(new Set(Object.values(extraSchematics).map(m=>m.motion)).size,12);
+ assert.throws(()=>applyExtraMotion('unknown',0,{}));
+});
+test('relief visual style offers multiple depth-shading palettes',()=>{
+ assert.deepEqual([...figureStyles],['relief','structure']);
+ for(const zone of ['torso','head','arms','legs']){
+  assert.equal(segmentGradientStops(zone).length,4);
+  assert.equal(segmentGradientStops(zone,true).length,4);
  }
 });
