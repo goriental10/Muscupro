@@ -6,35 +6,35 @@ L’entrée **Exercices animés** ouvre `/exercises`. La version autonome est di
 
 - **141 exercices** dans **12 groupes**.
 - **1 illustration d’origine** fournie pour les **élévations latérales avec haltères** : 12 images, GIF inchangé, 700 × 700 px, boucle de 3 secondes.
-- **24 mouvements 3D schématiques** : deux exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires, en trois dimensions, projetée sur un Canvas 2D orientable.
-- **116 exercices** n’ont pas encore d’animation propre : ils restent dans l’onglet « Tous », affichent clairement « À illustrer », sans recycler le média d’un autre exercice.
+- **36 mouvements 3D schématiques** : trois exercices distincts dans chacun des 12 groupes. Chaque entrée possède sa propre trajectoire de points articulaires, en trois dimensions, projetée sur un Canvas 2D orientable.
+- **104 exercices** n’ont pas encore d’animation propre : ils restent dans l’onglet « Tous », affichent clairement « À illustrer », sans recycler le média d’un autre exercice.
 
-Les 24 animations sont des **représentations de développement simplifiées**, pas des scans anatomiques 3D, de la capture de mouvements ni des démonstrations biomécaniquement validées. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
+Les 36 animations sont des **représentations de développement simplifiées**, pas des scans anatomiques 3D, de la capture de mouvements ni des démonstrations biomécaniquement validées. Certaines articulations et trajectoires sont simplifiées. **Aucun de ces schémas ne remplace une instruction personnalisée en entraînement.**
 
 ## Exercices disposant d’un modèle 3D schématique
 
 | Groupe | Exercices |
 | --- | --- |
-| Pectoraux | Pompes classiques ; Pompes inclinées |
-| Dos | Rowing à un bras avec haltère ; Tirage vertical devant |
-| Épaules | Développé épaules ; Élévations frontales avec haltères |
-| Biceps | Curl marteau ; Curl alterné |
-| Triceps | Extension triceps à la poulie ; Extension au-dessus de la tête |
-| Quadriceps | Squat ; Fentes avant |
-| Ischio-jambiers | Soulevé de terre roumain ; Leg curl debout |
-| Fessiers | Pont fessier au sol ; Kickback à quatre pattes |
-| Mollets | Extensions mollets debout ; Extensions mollets sur une jambe |
-| Abdominaux | Crunch abdominal ; Planche latérale |
-| Cardio | Marche active ; Jumping jack adapté |
-| Mobilité | Cercles des épaules ; Chat-vache |
+| Pectoraux | Pompes classiques ; Pompes inclinées ; Écarté couché avec haltères |
+| Dos | Rowing à un bras avec haltère ; Tirage vertical devant ; Tirage bras tendus à la poulie |
+| Épaules | Développé épaules ; Élévations frontales avec haltères ; Oiseau buste penché |
+| Biceps | Curl marteau ; Curl alterné ; Curl concentré |
+| Triceps | Extension triceps à la poulie ; Extension au-dessus de la tête ; Kickback triceps |
+| Quadriceps | Squat ; Fentes avant ; Squat goblet |
+| Ischio-jambiers | Soulevé de terre roumain ; Leg curl debout ; Soulevé de terre à une jambe |
+| Fessiers | Pont fessier au sol ; Kickback à quatre pattes ; Marche latérale avec élastique |
+| Mollets | Extensions mollets debout ; Extensions mollets sur une jambe ; Relevés de pointes |
+| Abdominaux | Crunch abdominal ; Planche latérale ; Bird dog |
+| Cardio | Marche active ; Jumping jack adapté ; Course légère |
+| Mobilité | Cercles des épaules ; Chat-vache ; Rotation thoracique à quatre pattes |
 
-Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
+Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Le sélecteur **Rendu** propose **Relief ombré** (volumes dessinés et éclairage stylisé) ou **Structure articulée** (ancien tracé). Ce rendu reste en 2D et n'est pas un maillage anatomique 3D. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
 
 ## Illustration originale
 
 Le GIF `assets/elevations-laterales-exercice-musculation-1.gif` est conservé sans modification et associé exclusivement à la fiche des élévations latérales. Ses douze images ont été compositées dans la planche WebP utilisée par le lecteur. Deux modes d’affichage existent : **GIF d’origine** avec les temporisations fournies et **Mouvement fluide** avec une reconstruction visuelle articulée en 2D (montée 1,45 s, descente 2,05 s, transitions 0,18 et 0,22 s). Cette reconstruction n'est pas non plus un modèle anatomique 3D.
 
-La mise en évidence des épaules présente dans le GIF provient directement du média fourni ; l'interrupteur de zones musculaires ne s'applique qu'aux **24 schémas 3D**, pas à cette illustration.
+La mise en évidence des épaules présente dans le GIF provient directement du média fourni ; l'interrupteur de zones musculaires ne s'applique qu'aux **36 schémas 3D**, pas à cette illustration.
 
 ## Fonctionnalités
 
@@ -49,7 +49,9 @@ Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'an
 | `catalog.mjs` | Catalogue de 141 fiches, identifiants stables et filtres |
 | `illustrations.mjs` | Lien strict avec le média original et les durées des images |
 | `illustration-motion.mjs` | Animation 2D articulée issue du dessin fourni |
-| `schematic-3d.mjs` | 24 mouvements 3D schématiques, modèles articulaires, projection et rendu |
+| `schematic-3d.mjs` | 36 mouvements 3D schématiques, points articulaires, projection et rendu |
+| `schematic-extra-motions.mjs` | 12 nouveaux mouvements distincts répartis sur les 12 groupes |
+| `figure-surface.mjs` | Effet de relief ombré et palette de surfaces non anatomiques |
 | `anatomy-zones.mjs` | 12 zones musculaires indicatives et leurs mises en évidence |
 | `illustration-player.mjs` | Lecture Canvas, contrôle caméra et visibilité des zones |
 | `app.mjs`, `index.html`, `styles.css` | Navigation, commandes, état et interface responsive |
