@@ -28,7 +28,7 @@ Les 48 animations sont des **représentations de développement simplifiées**, 
 | Cardio | Marche active ; Jumping jack adapté ; Course légère ; Montée de marche |
 | Mobilité | Cercles des épaules ; Chat-vache ; Rotation thoracique à quatre pattes ; Balancement de cheville |
 
-Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Le sélecteur **Rendu** propose **Relief ombré** (volumes dessinés et éclairage stylisé) ou **Structure articulée** (ancien tracé). Ce rendu reste en 2D et n'est pas un maillage anatomique 3D. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
+Chaque schéma affiche une région du corps liée à son groupe, via l'option **Muscles illustrés**. Ce repère graphique **n’affirme pas une activation musculaire exacte** (pas de mesure EMG ou d’évaluation clinique). Le nom de la région apparaît sous les commandes du lecteur. Le sélecteur **Rendu** propose désormais **Mannequin réaliste stylisé** (par défaut : formes continues, torse et membres effilés, tête, mains, pieds, vêtements simples et nuances d'ombrage), **Relief ombré** (ancien volume en capsules) et **Structure articulée** (ancien tracé). Le mode mannequin comporte deux finitions : **Céramique naturelle** et **Ardoise bleutée**, sans assigner d'attributs à une personne réelle. Les 48 animations continuent d'utiliser leurs trajectoires de points 3D, projetées en 2D. Il ne s'agit pas d'un maillage anatomique 3D, d'une capture de mouvements ou d'une anatomie biomécaniquement validée. Les contrôles **Vue gauche / Vue droite**, le glissement (sans zoom) et la molette (zoom) permettent l’exploration visuelle. Les schémas peuvent être mis en pause ou parcourus à vitesse ×0,5, ×1, ×1,5 ou ×2.
 
 ## Illustration originale
 
@@ -52,7 +52,8 @@ Le lecteur respecte `prefers-reduced-motion` à son initialisation, suspend l'an
 | `schematic-3d.mjs` | 48 mouvements 3D schématiques, points articulaires, projection et rendu |
 | `schematic-extra-motions.mjs` | 12 mouvements schématiques de la troisième série |
 | `schematic-fourth-motions.mjs` | 12 mouvements supplémentaires, un par groupe |
-| `figure-surface.mjs` | Effet de relief ombré et palette de surfaces non anatomiques |
+| `figure-surface.mjs` | Ancien effet de relief ombré et palette de surfaces non anatomiques |
+| `mannequin-renderer.mjs` | Rendu de mannequin à formes organiques, silhouettes arrondies et deux finitions |
 | `anatomy-zones.mjs` | 12 zones musculaires indicatives et leurs mises en évidence |
 | `illustration-player.mjs` | Lecture Canvas, contrôle caméra et visibilité des zones |
 | `app.mjs`, `index.html`, `styles.css` | Navigation, commandes, état et interface responsive |
@@ -69,6 +70,6 @@ pnpm --filter @muscupro/web typecheck
 pnpm --filter @muscupro/web build
 ```
 
-Les suites Node contrôlent aussi les 48 schémas 3D, les 49 associations de médias et les 92 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
+Les suites Node contrôlent aussi les silhouettes du mannequin pour les 48 schémas (deux finitions), le maintien des deux rendus précédents, les 48 schémas 3D, les 49 associations de médias et les 92 fiches sans animation. Elles contrôlent les associations d'identifiants, l'intégrité du média original, le cycle de lecture, la continuité de chaque boucle, les coordonnées des articulations, la différenciation des trajectoires et le rendu des zones graphiques activées ou désactivées.
 
 Un aperçu Web est prévu dans les déploiements de branche Vercel. Les tests automatiques et une prévisualisation ne remplacent pas une vérification fonctionnelle sur iPhone/Android ni une expertise en biomécanique. La production et la branche `main` ne sont pas modifiées par cette étape.
