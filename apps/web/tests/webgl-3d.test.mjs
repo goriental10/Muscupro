@@ -4,7 +4,7 @@ import {catalogue} from '../public/exercises-illustrated/catalog.mjs';
 import {illustrations} from '../public/exercises-illustrated/illustrations.mjs';
 import {schematics,poseForExercise,schematicDuration} from '../public/exercises-illustrated/schematic-3d.mjs';
 import {groupForSchematicId} from '../public/exercises-illustrated/anatomy-zones.mjs';
-import {addTaperedBone,addEllipsoid,addTorso,buildAnatomicalMesh,meshMaterials,meshPalette,perspective,lookAt,orbitCamera} from '../public/exercises-illustrated/webgl-mesh.mjs';
+import {addTaperedBone,addEllipsoid,addTorso,buildAnatomicalMesh,meshMaterials,meshPalette,perspective,lookAt,orbitCamera,regionLabels,addAnatomicalRegionMeshes} from '../public/exercises-illustrated/webgl-mesh.mjs';
 
 test('3D mesh constructs normals, colors, and triangles without dependencies',()=>{
  const out=[];
@@ -24,12 +24,12 @@ test('3D mesh constructs normals, colors, and triangles without dependencies',()
  assert.throws(()=>addEllipsoid([],[0,0,0],[-1,1,1],[1,1,1]));
 });
 test('WebGL meshes cover all 48 matching exercise motions with finite normals at multiple phases',()=>{
- assert.equal(Object.keys(schematics).length,48);
+ assert.equal(Object.keys(schematics).length,60);
  assert.equal(catalogue.length,141);
  assert.equal(Object.keys(illustrations).length,1);
  const animatedIds=new Set([...Object.keys(schematics),...Object.keys(illustrations)]);
- assert.equal(animatedIds.size,49);
- assert.equal(catalogue.length-animatedIds.size,92);
+ assert.equal(animatedIds.size,61);
+ assert.equal(catalogue.length-animatedIds.size,80);
  for(const [id] of Object.entries(schematics)){
   const exercise=catalogue.find(item=>item.id===id);
   assert.ok(exercise,id);
@@ -69,4 +69,21 @@ test('3D model viewpoints use finite camera and projection matrices',()=>{
 test('WebGL renderer shader module imports without requiring DOM when not instantiated',async()=>{
  const {WebGLMannequinLayer}=await import('../public/exercises-illustrated/webgl-mannequin.mjs');
  assert.equal(typeof WebGLMannequinLayer,'function');
+});
+
+test('localized 3D muscle landmarks have group-specific geometry without recoloring entire limbs',()=>{
+ assert.equal(Object.keys(regionLabels).length,12);
+ const pose=poseForExercise('quadriceps-squat',.40),main=[];
+ const neutral=buildAnatomicalMesh(pose,{group:'Quadriceps',showMuscles:false});
+ for(const group of Object.keys(regionLabels)){
+  const out=[];addAnatomicalRegionMeshes(out,pose,group,[.93,.38,.31]);
+  assert.ok(out.length>250,group+' missing 3D muscle landmarks');
+  assert.equal(out.length%27,0);
+  assert.ok(out.every(Number.isFinite),group+' invalid landmark vertices');
+  const highlighted=buildAnatomicalMesh(pose,{group,showMuscles:true});
+  assert.ok(highlighted.length>neutral.length,group+' not included in displayed mesh');
+ }
+ const without=buildAnatomicalMesh(pose,{group:'Quadriceps',showMuscles:false});
+ assert.equal(neutral.length,without.length);
+ assert.equal(main.length,0);
 });
